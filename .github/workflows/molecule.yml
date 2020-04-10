@@ -53,7 +53,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt -y install python3-setuptools python3 python3-pip docker
-        pip3 install docker wheel molecule
+        sudo pip3 install wheel
+        sudo pip3 install docker molecule
 
     - name: create molecule vm
       run: |
