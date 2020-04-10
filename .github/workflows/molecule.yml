@@ -51,8 +51,10 @@ jobs:
 
     - name: Install molecule
       run: |
-        sudo apt -y install python3-setuptools
-        pip3 install molecule-vagrant wheel docker
+        sudo apt update
+        sudo apt -y install python3-setuptools python3 python3-pip docker
+        sudo pip3 install wheel
+        sudo pip3 install docker molecule testinfra
 
     - name: create molecule vm
       run: |
