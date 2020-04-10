@@ -49,48 +49,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: configure keyboard layout
-      run: |
-        echo XKBLAYOUT='us' > /etc/default/keyboard
-
-    - name: install virtualization stack
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo apt-get update
-        sudo apt -y install cpu-checker
-        kvm-ok
-# shit happens here, containerization sucks... that was worth the try
-
-    - name: install virtualization stack
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        sudo apt -y install policycoreutils-python-utils qemu-kvm qemu-utils libvirt-clients libvirt-daemon-system bridge-utils python3-libvirt libnss-libvirt libguestfs-tools virtinst virt-top genisoimage libvirt-dev libvirt-bin
-
-    - name: install vagrant
-      env:
-        VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT: 1
-      run: |
-        wget https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
-        sudo apt -y install ./vagrant_2.2.7_x86_64.deb
-        vagrant plugin install vagrant-persistent-storage
-        vagrant plugin install vagrant-libvirt
-        sudo groupadd --system libvirt
-        sudo usermod -a -G libvirt $(whoami)
-        sudo /etc/init.d/libvirtd restart
-
     - name: Install molecule
       run: |
         sudo apt -y install python3-setuptools
-        pip3 install molecule-vagrant wheel
+        pip3 install molecule-vagrant wheel docker
 
     - name: create molecule vm
-      env:
-        LC_ALL: C.UTF-8
-        LANG: C.UTF-8
       run: |
-        molecule create --scenario-name kvm
+        molecule create
+
+    - name: converge molecule vm
+      run: |
+        molecule converge
 
     - name: verify
       run: |
