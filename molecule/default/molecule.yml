@@ -4,7 +4,7 @@ dependency:
   options:
     role-file: requirements.yml
 driver:
-  name: docker
+  name: caashost
 platforms:
   - name: instance
     image: robertdebock/fedora:31
