@@ -15,5 +15,7 @@ platforms:
     pre_build_image: yes
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: ../../..:../../../community
 verifier:
   name: testinfra
