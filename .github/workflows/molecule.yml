@@ -62,10 +62,6 @@ jobs:
         sudo pip3 install wheel
         sudo pip3 install docker molecule testinfra yamllint ansible-lint flake8
 
-    - name: install prereq
-      run: |
-        ./configure
-
     - name: execute molecule
       run: |
         molecule test
