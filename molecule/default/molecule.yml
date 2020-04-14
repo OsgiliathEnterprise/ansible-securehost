@@ -6,10 +6,7 @@ dependency:
     roles-path: ../community
 driver:
   name: docker
-lint: |
-  yamllint .
-  flake8
-  ansible-lint
+lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: ansible-securehost-vm
     image: robertdebock/fedora:31
