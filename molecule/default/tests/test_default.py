@@ -1,5 +1,6 @@
 """Role testing files using testinfra."""
 
+
 def test_fail2ban_is_installed(host):
     command = """dnf list installed fail2ban | grep -c 'fail2ban'"""
     cmd = host.run(command)

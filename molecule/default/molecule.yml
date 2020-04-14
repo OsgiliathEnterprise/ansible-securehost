@@ -3,10 +3,15 @@ dependency:
   name: galaxy
   options:
     role-file: requirements.yml
+    roles-path: ../community
 driver:
   name: docker
+lint: |
+  yamllint .
+  flake8
+  ansible-lint
 platforms:
-  - name: instance
+  - name: ansible-securehost-vm
     image: robertdebock/fedora:31
     command: /sbin/init
     volumes:
@@ -19,3 +24,7 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../..:../../../community
 verifier:
   name: testinfra
+  env:
+    PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
+  options:
+    v: 1
