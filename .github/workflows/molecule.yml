@@ -53,24 +53,12 @@ jobs:
         sudo apt update
         sudo apt -y install python3-setuptools python3 python3-pip docker
         sudo pip3 install wheel
-        sudo pip3 install docker molecule testinfra
-
-    - name: create molecule vm
-      run: |
-        molecule create
+        sudo pip3 install docker molecule testinfra yamllint ansible-lint flake8
 
     - name: install prereq
       run: |
         ./configure
 
-    - name: converge molecule vm
+    - name: execute molecule
       run: |
-        molecule converge
-
-    - name: verify
-      run: |
-        molecule verify
-
-    - name: teardown
-      run: |
-        molecule destroy
+        molecule test
