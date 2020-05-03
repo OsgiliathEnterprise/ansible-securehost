@@ -1,2 +1,9 @@
 ---
 # handlers file for securehost
+
+- name: ansible-securehost | restart sshd
+  systemd:
+    name: sshd
+    state: restarted
+  become: yes
+  listen: ansible-securehost | restart sshd
