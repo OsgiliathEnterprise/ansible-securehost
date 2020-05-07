@@ -13,6 +13,7 @@
     insertafter: '^#ChallengeResponseAuthentication '
     line: ChallengeResponseAuthentication no
   notify: ansible-securehost | restart sshd
+  become: true
 
 - name: ansible-secure host | disable password Authentication
   lineinfile:
@@ -21,3 +22,4 @@
     insertafter: '^#PasswordAuthentication '
     line: PasswordAuthentication no
   notify: ansible-securehost | restart sshd
+  become: true
