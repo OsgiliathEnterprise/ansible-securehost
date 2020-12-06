@@ -1,25 +1,4 @@
 ---
 # tasks file for ansible-securehost
-- name: ansible-secure host | sshd installed
-  package:
-    name: openssh-server
-    state: present
-  become: true
-
-- name: ansible-secure host | disable challenge response
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^ChallengeResponseAuthentication yes'
-    insertafter: '^#ChallengeResponseAuthentication '
-    line: ChallengeResponseAuthentication no
-  notify: ansible-securehost | restart sshd
-  become: true
-
-- name: ansible-secure host | disable password Authentication
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^PasswordAuthentication yes'
-    insertafter: '^#PasswordAuthentication '
-    line: PasswordAuthentication no
-  notify: ansible-securehost | restart sshd
-  become: true
+- name: ansible-securehost | configure ssh
+  import_tasks: ssh.yml
