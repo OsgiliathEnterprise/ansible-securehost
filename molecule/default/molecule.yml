@@ -9,7 +9,7 @@ driver:
 lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: ansible-securehost-vm
-    image: robertdebock/fedora:31
+    image: robertdebock/fedora:32
     command: /sbin/init
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro

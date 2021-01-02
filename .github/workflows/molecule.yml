@@ -25,14 +25,16 @@ jobs:
 
     - name: install lint prerequisite
       run: |
-        sudo apt -y install python3-setuptools ansible-lint
+        sudo apt update
+        sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        sudo apt -y install python3-setuptools ansible-lint python3 python3-pip docker-ce
 
     - name: Install molecule
       run: |
-        sudo apt update
-        sudo apt -y install python3-setuptools python3 python3-pip docker
-        sudo pip3 install wheel
-        sudo pip3 install docker molecule testinfra yamllint ansible-lint flake8
+        sudo pip3 install wheel docker
+        sudo pip3 install molecule molecule-docker testinfra yamllint ansible-lint flake8
 
     - name: molecule lint
       run: |
@@ -42,20 +44,21 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
-
     steps:
     - uses: actions/checkout@v2
 
-    - name: install lint prerequisite
+    - name: install requirements prerequisite
       run: |
-        sudo apt -y install python3-setuptools ansible-lint
+        sudo apt update
+        sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        sudo apt -y install python3-setuptools ansible-lint python3 python3-pip docker-ce
 
     - name: Install molecule
       run: |
-        sudo apt update
-        sudo apt -y install python3-setuptools python3 python3-pip docker
-        sudo pip3 install wheel
-        sudo pip3 install docker molecule testinfra yamllint ansible-lint flake8
+        sudo pip3 install wheel docker
+        sudo pip3 install molecule molecule-docker testinfra yamllint ansible-lint flake8
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: install prereq
       run: |
@@ -67,13 +70,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install molecule
+    - name: install tests prerequisite
       run: |
         sudo apt update
-        sudo apt -y install python3-setuptools python3 python3-pip docker
-        sudo pip3 install wheel
-        sudo pip3 install docker molecule testinfra yamllint ansible-lint flake8
+        sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        sudo apt -y install python3-setuptools ansible-lint python3 python3-pip docker-ce
+
+    - name: Install molecule
+      run: |
+        sudo pip3 install wheel docker
+        sudo pip3 install molecule molecule-docker testinfra yamllint ansible-lint flake8
 
     - name: execute molecule
       run: |
-        molecule test
+        sudo molecule test
