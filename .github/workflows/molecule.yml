@@ -76,4 +76,4 @@ jobs:
 
     - name: execute molecule
       run: |
-        molecule test
+        sudo molecule test
