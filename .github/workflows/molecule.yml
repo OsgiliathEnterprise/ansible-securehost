@@ -80,8 +80,8 @@ jobs:
 
     - name: Install molecule
       run: |
-        pip3 install wheel docker
-        pip3 install molecule molecule-docker testinfra yamllint ansible-lint flake8
+        sudo pip3 install wheel docker
+        sudo pip3 install molecule molecule-docker testinfra yamllint ansible-lint flake8
 
     - name: execute molecule
       run: |
