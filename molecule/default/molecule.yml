@@ -2,23 +2,62 @@
 dependency:
   name: galaxy
   options:
+#    requirements-file: requirements-collections.yml TODO uncomment after the next freeipa collection release
+#    collections-path: ../community-collections
     role-file: requirements.yml
     roles-path: ../community
 driver:
-  name: docker
+  name: vagrant
+  provider:
+    name: virtualbox
 lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
-  - name: ansible-securehost-vm
-    image: robertdebock/fedora:32
-    command: /sbin/init
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    privileged: yes
-    pre_build_image: yes
+  - name: idm.osgiliath.test
+    box: fedora/33-cloud-base
+    provider_options:
+      cpus: 2
+      memory: 3096
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+      - network_name: forwarded_port
+        guest: 80
+        host: 8080
+      - network_name: forwarded_port
+        guest: 443
+        host: 443
+      - network_name: forwarded_port
+        guest: 53
+        host: 53
+    groups:
+      - ipaservers
+    instance_raw_config_args:
+      - "cache.enable :dnf"
+      - "cache.auto_detect = false"
+    provider_raw_config_args:
+      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
+  - name: client.osgiliath.test
+    box: fedora/33-cloud-base
+    cpus: 2
+    memory: 3096
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    groups:
+      - ipaclients
+    instance_raw_config_args:
+      - "cache.enable :dnf"
+      - "cache.auto_detect = false"
+    provider_raw_config_args:
+      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
+
 provisioner:
   name: ansible
   env:
-    ANSIBLE_ROLES_PATH: ../../..:../../../community
+    ANSIBLE_ROLES_PATH: ${ANSIBLE_ROLES_PATH}:../../../community
+    ANSIBLE_COLLECTIONS_PATH: ${ANSIBLE_COLLECTIONS_PATH}:../community-collections
 verifier:
   name: testinfra
   env:

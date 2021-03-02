@@ -1,4 +1,13 @@
 ---
 # tasks file for ansible-securehost
+
 - name: ansible-securehost | configure ssh
   import_tasks: ssh.yml
+
+- name: ansible-securehost | idm server
+  import_tasks: freeipa-server.yml
+  when: idm_group | default("") | string in group_names
+
+- name: ansible-securehost | idm client
+  import_tasks: freeipa-client.yml
+  when: idm_client_group | default("") | string in group_names

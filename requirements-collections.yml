@@ -1,0 +1,9 @@
+---
+collections:
+  - name: freeipa.ansible_freeipa
+    source: https://galaxy.ansible.com
+    path: ../community
+
+  - name: ansible.posix
+    source: https://galaxy.ansible.com
+    path: ../community

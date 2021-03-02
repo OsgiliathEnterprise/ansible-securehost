@@ -1,0 +1,3 @@
+[Resolve]
+DNS={{ ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses | sort | reverse | join(' ') }} 8.8.8.8
+Domains=~.
