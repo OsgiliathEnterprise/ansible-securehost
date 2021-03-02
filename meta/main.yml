@@ -1,3 +1,8 @@
+---
+
+collections:
+  - freeipa.ansible_freeipa
+
 galaxy_info:
   author: cmordant1@gmail.com
   description: Wrapper role for fail2ban installation, based on [robertdebock work](https://github.com/robertdebock/ansible-role-fail2ban)
@@ -30,7 +35,7 @@ galaxy_info:
   platforms:
   - name: Fedora
     versions:
-    - 31
+    - 33
   #   - 25
   # - name: SomePlatform
   #   versions:
@@ -41,6 +46,7 @@ galaxy_info:
 
   galaxy_tags:
     - fail2ban
+    - freeipa
     # List tags for your role here, one per line. A tag is a keyword that describes
     # and categorizes the role. Users find roles by searching for tags. Be sure to
     # remove the '[]' above, if you add tags to this list.

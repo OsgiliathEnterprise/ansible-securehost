@@ -1,0 +1,65 @@
+---
+
+- name: ansible-securehost | freeipa-client | set hostname to "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
+  include_role:
+    name: tcharl.hostname
+  vars:
+    hostname: "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
+    hostname_reboot: false
+    ansible_become: true
+
+- name: ansible-securehost | freeipa-client | retreive masters ip
+  setup:
+  register: ipamasterssetup
+  delegate_to: "{{ groups[idm_group][0] }}"
+
+- name: ansible-securehost | freeipa-client | create resolved.conf.d directory
+  become: true
+  file:
+    state: directory
+    dest: '/etc/systemd/resolved.conf.d'
+    mode: "0755"
+
+- name: ansible-securehost | freeipa-client | add dns reference in resolv.conf
+  template:
+    src: dns_servers.conf.j2
+    dest: "/etc/systemd/resolved.conf.d/dns_servers.conf"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: ansible-securehost | freeipa-client | restarts systemd-resolved
+  service:
+    name: systemd-resolved
+    state: restarted
+  changed_when: false
+  become: true
+
+- name: ansible-securehost | freeipa-client | Debug idm groups variable
+  debug:
+    msg: "{{ groups[idm_group] }}"
+    verbosity: 3
+
+- name: ansible-securehost | freeipa-client | install freeipa-client
+  include_role:
+    name: freeipa.ansible_freeipa.ipaclient
+  vars:
+    ipaclients: "{{ groups[idm_client_group] | list }}"
+    ipaadmin_principal: "{{ company_realm_principal }}"
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipaserver_domain: "{{ company_domain }}"
+    ipaserver_realm: "{{ company_domain | upper }}"
+    ipaclient_servers: "{{ groups[idm_group] | list }}"
+    ipaclient_force_join: yes
+    ipaclient_hostname: "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
+    ipaclient_ip_addresses: "{{ ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses }}"
+#    ipaclient_use_otp: yes
+    ipaclient_allow_repair: yes
+    ansible_become: true
+
+
+##### Commands for testing
+#### kinit admin
+### ipa user-find
+### ipa user-add yume --first=yume --last=sensei --email=yume@senzei.io  --shell=/bin/bash --password

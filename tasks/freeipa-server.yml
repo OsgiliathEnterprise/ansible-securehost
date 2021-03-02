@@ -1,0 +1,37 @@
+---
+
+- name: ansible-securehost | freeipa-server | set hostname
+  include_role:
+    name: tcharl.hostname
+  vars:
+    hostname: "{{ idm_server_default_domain_prefix }}.{{ company_domain }}"
+    hostname_reboot: false
+    ansible_become: true
+
+- name: ansible-securehost | freeipa-server | opens freeipa services firewall
+  include_role:
+    name: tcharl.ansible_routing
+  vars:
+    firewalld_zones:
+      - name: public
+        enabled_services:
+          - service: freeipa-ldap
+          - service: freeipa-ldaps
+          - service: dns
+          - service: https
+
+- name: ansible-securehost | freeipa-server | configures and installs freeipa server
+  include_role:
+    name: freeipa.ansible_freeipa.ipaserver
+  vars:
+    ipaserver_ip_addresses: "{{ ansible_all_ipv4_addresses }}"
+    ipaserver_domain: "{{ company_domain }}"
+    ipaserver_realm: "{{ company_domain | upper }}"
+    ipaserver_forwarders: [ ]
+    ipaserver_no_reverse: false
+    ipaserver_setup_dns: yes
+    ipaserver_setup_kra: yes
+    ipaserver_auto_forwarders: yes
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipadm_password: "{{ company_ad_password }}"
+    ansible_become: true
