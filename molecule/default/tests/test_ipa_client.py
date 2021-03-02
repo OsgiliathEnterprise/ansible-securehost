@@ -8,18 +8,21 @@ def test_ipa_installed_on_client(host):
 
 
 def test_ipa_realm_configured_client(host):
-    command = """cat /etc/ipa/default.conf | grep -c 'realm = OSGILIATH.TEST'"""
+    command = """cat /etc/ipa/default.conf | \
+    grep -c 'realm = OSGILIATH.TEST'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
 
 
 def test_ipa_domain_configured_client(host):
-    command = """cat /etc/ipa/default.conf | grep -c 'domain = osgiliath.test'"""
+    command = """cat /etc/ipa/default.conf | \
+    grep -c 'domain = osgiliath.test'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
 
 
 def test_rpc_uri_configured_client(host):
-    command = """cat /etc/ipa/default.conf | grep -c 'xmlrpc_uri = https://idm.osgiliath.test/ipa/xml'"""
+    command = """cat /etc/ipa/default.conf | \
+    grep -c 'xmlrpc_uri = https://idm.osgiliath.test/ipa/xml'"""
     cmd = host.run(command)
     assert '1' in cmd.stdout
