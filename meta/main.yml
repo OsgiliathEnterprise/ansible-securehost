@@ -4,9 +4,10 @@ collections:
   - freeipa.ansible_freeipa
 
 galaxy_info:
-  author: cmordant1@gmail.com
   description: Wrapper role for fail2ban installation, based on [robertdebock work](https://github.com/robertdebock/ansible-role-fail2ban)
   company: Osgiliath
+  role_name: ansible_securehost
+  author: OsgiliathEnterprise
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
