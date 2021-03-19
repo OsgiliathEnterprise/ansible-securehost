@@ -7,7 +7,7 @@ idm_client_group: 'ipaclients'
 company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
 company_realm_password: '123ADMin'
 company_ad_password: '123ADmPass'
-company_realm_principal: 'admin'
+company_realm_principal: 'admin' # cannot be modified
 idm_server_default_domain_prefix: 'idm'
 # Free IPA client defaults
 

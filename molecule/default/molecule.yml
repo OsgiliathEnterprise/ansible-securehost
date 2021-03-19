@@ -2,8 +2,8 @@
 dependency:
   name: galaxy
   options:
-#    requirements-file: requirements-collections.yml TODO uncomment after the next freeipa collection release
-#    collections-path: ../community-collections
+    requirements-file: requirements-collections.yml # TODO uncomment after the next freeipa collection release
+    collections-path: ../community-collections
     role-file: requirements.yml
     roles-path: ../community
 driver:
@@ -64,3 +64,19 @@ verifier:
     PYTHONWARNINGS: "ignore:.*U.*mode is deprecated:DeprecationWarning"
   options:
     v: 1
+scenario:
+  name: default
+  test_sequence:
+    - lint
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+ #   - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
