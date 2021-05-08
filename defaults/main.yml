@@ -12,3 +12,6 @@ idm_server_default_domain_prefix: 'idm'
 # Free IPA client defaults
 
 idm_client_default_domain_prefix: 'client'
+
+# from ansible_routing
+reverse_proxy_group: "reverse_proxy"

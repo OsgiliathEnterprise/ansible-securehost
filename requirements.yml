@@ -4,7 +4,7 @@ roles:
   - name: tcharl.ansible_routing
     source: https://galaxy.ansible.com
     path: ../community
-  - name: tcharl.hostname
+  - name: tcharl.ansible_hostname
     source: https://galaxy.ansible.com
     path: ../community
   - name: robertdebock.fail2ban
