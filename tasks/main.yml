@@ -8,6 +8,13 @@
   import_tasks: freeipa-server.yml
   when: idm_group | default("") | string in group_names
 
+- name: ansible-securehost | unconfigure client
+  import_tasks: freeipa-reset-client.yml
+  when:
+   - idm_client_group | default("") | string in group_names
+   - reset_ipa is defined
+   - reset_ipa == True
+
 - name: ansible-securehost | idm client
   import_tasks: freeipa-client.yml
   when: idm_client_group | default("") | string in group_names

@@ -4,7 +4,7 @@
   include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ idm_server_default_domain_prefix }}.{{ company_domain }}"
+    hostname: "{{ ns_hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
     hostname_reboot: false
     ansible_become: true
 
@@ -35,18 +35,3 @@
     ipaadmin_password: "{{ company_realm_password }}"
     ipadm_password: "{{ company_ad_password }}"
     ansible_become: true
-
-- name: ansible-securehost | freeipa-server | reverse-proxies freeipa
-  include_role:
-    name: tcharl.ansible_routing
-  vars:
-    virtual_hosts:
-      - name: "{{ idm_server_default_domain_prefix }}.{{ company_domain }}"
-        proxy_pass_prefix: "https://"
-        redirect_on_group_machine_ip: "{{ idm_group }}"
-        # nic_name: "eth0"
-        proxy_pass_suffix: "/"
-        ports_binding:
-          - "443:443"
-  when:
-   - reverse_proxy_group | default("") | string in group_names

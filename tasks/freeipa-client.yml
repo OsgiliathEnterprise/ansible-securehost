@@ -1,17 +1,14 @@
 ---
 
-- name: ansible-securehost | freeipa-client | set hostname to "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
-  include_role:
-    name: tcharl.hostname
-  vars:
-    hostname: "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
-    hostname_reboot: false
-    ansible_become: true
-
 - name: ansible-securehost | freeipa-client | retreive masters ip
   setup:
   register: ipamasterssetup
-  delegate_to: "{{ groups[idm_group][0] }}"
+  delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
+
+- name: ansible-securehost | freeipa-client | debug masters ip
+  debug:
+    msg: "{{ ipamasterssetup }}"
+    verbosity: 2
 
 - name: ansible-securehost | freeipa-client | create resolved.conf.d directory
   become: true
@@ -39,7 +36,24 @@
 - name: ansible-securehost | freeipa-client | Debug idm groups variable
   debug:
     msg: "{{ groups[idm_group] }}"
-    verbosity: 3
+    verbosity: 2
+
+- name: ansible-securehost | freeipa-client | compute hostname
+  debug:
+    msg: "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+  register: serverhost
+
+- name: ansible-securehost | freeipa-client | set hostname to "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+  include_role:
+    name: tcharl.ansible_nameserver
+  vars:
+    ns_hostname: "{{ serverhost.msg }}"
+    hostname_reboot: false
+    ansible_become: true
+    hosts_entries:
+      - name: "{{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
+        ip: "{{ ipamasterssetup.ansible_facts.ansible_default_ipv4.address |
+      default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
 
 - name: ansible-securehost | freeipa-client | install freeipa-client
   include_role:
@@ -52,7 +66,7 @@
     ipaserver_realm: "{{ company_domain | upper }}"
     ipaclient_servers: "{{ groups[idm_group] | list }}"
     ipaclient_force_join: yes
-    ipaclient_hostname: "{{ idm_client_default_domain_prefix }}.{{ company_domain }}"
+    ipaclient_hostname: "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
     ipaclient_ip_addresses: "{{ ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses }}"
 #    ipaclient_use_otp: yes
     ipaclient_allow_repair: yes

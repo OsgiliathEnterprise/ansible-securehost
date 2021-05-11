@@ -8,7 +8,8 @@ Ansible SecureHost
 Wrapper role on top of [robertdebock.fail2ban](https://github.com/robertdebock/ansible-role-fail2ban)
 In addition, it will disable login/password ssh authentication 
 
-Also let you install freeipa server or freeipa client
+Also let you install freeipa server (monoinstance at the moment) or freeipa client wrapping the calls in a simpler way
+
 Requirements
 ------------
 
@@ -18,6 +19,7 @@ Role Variables
 --------------
 
 Same as [robertdebock.fail2ban](https://github.com/robertdebock/ansible-role-fail2ban)
+Take a look at the [molecule tests](./molecule/default/converge.yml) tests and the [default variables](./defaults/main.yml)
 
 Dependencies
 ------------

@@ -4,6 +4,9 @@ roles:
   - name: tcharl.ansible_routing
     source: https://galaxy.ansible.com
     path: ../community
+  - name: tcharl.ansible_nameserver
+    source: https://galaxy.ansible.com
+    path: ../community
   - name: tcharl.ansible_hostname
     source: https://galaxy.ansible.com
     path: ../community

@@ -4,7 +4,7 @@ idm_group: 'ipaservers' # do not change: convention from the ip roles
 idm_client_group: 'ipaclients'
 
 # Free IPA server
-company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
+company_domain: "osgiliath.test" # That server's hostname will be ipa."{{ company_domain }}"
 company_realm_password: '123ADMin'
 company_ad_password: '123ADmPass'
 company_realm_principal: 'admin' # cannot be modified
