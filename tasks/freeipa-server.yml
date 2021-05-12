@@ -1,7 +1,7 @@
 ---
 
 - name: ansible-securehost | freeipa-server | set hostname
-  include_role:
+  ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
     hostname: "{{ ns_hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
@@ -9,7 +9,7 @@
     ansible_become: true
 
 - name: ansible-securehost | freeipa-server | opens freeipa services firewall
-  include_role:
+  ansible.builtin.include_role:
     name: tcharl.ansible_routing
   vars:
     firewalld_zones:
@@ -21,7 +21,7 @@
           - service: https
 
 - name: ansible-securehost | freeipa-server | configures and installs freeipa server
-  include_role:
+  ansible.builtin.include_role:
     name: freeipa.ansible_freeipa.ipaserver
   vars:
     ipaserver_ip_addresses: "{{ ansible_all_ipv4_addresses }}"

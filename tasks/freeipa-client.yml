@@ -34,17 +34,17 @@
   become: true
 
 - name: ansible-securehost | freeipa-client | Debug idm groups variable
-  debug:
+  ansible.builtin.debug:
     msg: "{{ groups[idm_group] }}"
     verbosity: 2
 
 - name: ansible-securehost | freeipa-client | compute hostname
-  debug:
+  ansible.builtin.debug:
     msg: "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
   register: serverhost
 
 - name: ansible-securehost | freeipa-client | set hostname to "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
-  include_role:
+  ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
     ns_hostname: "{{ serverhost.msg }}"
@@ -56,7 +56,7 @@
       default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
 
 - name: ansible-securehost | freeipa-client | install freeipa-client
-  include_role:
+  ansible.builtin.include_role:
     name: freeipa.ansible_freeipa.ipaclient
   vars:
     ipaclients: "{{ groups[idm_client_group] | list }}"

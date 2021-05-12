@@ -1,7 +1,7 @@
 ---
 
 - name: ansible-securehost | freeipa-unconfigure-client | uninstall
-  include_role:
+  ansible.builtin.include_role:
     name: freeipa.ansible_freeipa.ipaclient
   vars:
     state: absent
@@ -9,14 +9,14 @@
 
 - name: ansible-securehost | freeipa-unconfigure-client | uninstall
   become: true
-  file:
+  ansible.builtin.file:
     state: absent
     dest: '/etc/ipa'
     mode: "0755"
 
 - name: ansible-securehost | freeipa-unconfigure-client | recreate ipa folder
   become: true
-  file:
+  ansible.builtin.file:
     state: directory
     owner: root
     group: root

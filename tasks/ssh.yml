@@ -1,13 +1,13 @@
 ---
 # tasks file for ansible-securehost
 - name: ansible-securehost | ssh | sshd installed
-  package:
+  ansible.builtin.package:
     name: openssh-server
     state: present
   become: true
 
 - name: ansible-secure host | ssh | disable challenge response
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^ChallengeResponseAuthentication yes'
     insertafter: '^#ChallengeResponseAuthentication '
@@ -16,7 +16,7 @@
   become: true
 
 - name: ansible-secure host | ssh | disable password Authentication
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^PasswordAuthentication yes'
     insertafter: '^#PasswordAuthentication '

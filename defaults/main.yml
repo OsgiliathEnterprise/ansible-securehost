@@ -1,6 +1,6 @@
 ---
 # defaults file for securehost
-idm_group: 'ipaservers' # do not change: convention from the ip roles
+idm_group: 'ipaservers' # do not change: convention from the ipa roles
 idm_client_group: 'ipaclients'
 
 # Free IPA server
