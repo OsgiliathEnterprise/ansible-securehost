@@ -13,7 +13,7 @@
   when:
    - idm_client_group | default("") | string in group_names
    - reset_ipa is defined
-   - reset_ipa == True
+   - reset_ipa
 
 - name: ansible-securehost | idm client
   ansible.builtin.import_tasks: freeipa-client.yml
