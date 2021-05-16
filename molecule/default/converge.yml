@@ -7,3 +7,4 @@
         name: "ansible-securehost"
       vars:
         preferred_nic: "eth1"
+        company_domain: osgiliath.test
