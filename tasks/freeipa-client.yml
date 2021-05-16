@@ -58,7 +58,7 @@
     msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: ipa_master_ip
 
-- name: ansible-securehost | freeipa-client | set hostname to "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+- name: ansible-securehost | freeipa-client | set hostname to "{{ ns_hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
@@ -80,7 +80,7 @@
     ipaserver_realm: "{{ company_domain | upper }}"
     ipaclient_servers: "{{ groups[idm_group] | list }}"
     ipaclient_force_join: yes
-    ipaclient_hostname: "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+    ipaclient_hostname: "{{ ns_hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
     ipaclient_ip_addresses: "{{ ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses }}"
 #    ipaclient_use_otp: yes
     ipaclient_allow_repair: yes
