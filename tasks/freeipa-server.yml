@@ -5,6 +5,10 @@
   changed_when: False
   register: current_hostname
 
+- name: ansible-securehost | freeipa-server | debug current hostname
+  ansible.builtin.debug:
+    var: current_hostname
+
 - name: ansible-securehost | freeipa-server | compute server hostname
   ansible.builtin.debug:
     msg: "{{ ns_hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_server_default_domain_prefix + '.' + company_domain) }}"
