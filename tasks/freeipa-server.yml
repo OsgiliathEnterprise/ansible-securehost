@@ -1,10 +1,20 @@
 ---
 
+- name: ansible-securehost | freeipa-server | retreive current hostname
+  command: "hostname"
+  changed_when: False
+  register: current_hostname
+
+- name: ansible-securehost | freeipa-server | compute hostname if current is localhost
+  ansible.builtin.debug:
+    msg: "{{ current_hostname.stdout if current_hostname.stdout.startswith('localhost') else ns_hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
+  register: serverhost
+
 - name: ansible-securehost | freeipa-server | set hostname
   ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ ns_hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
+    hostname: "{{ serverhost.msg }}"
     hostname_reboot: false
     ansible_become: true
 
