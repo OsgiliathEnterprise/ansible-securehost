@@ -3,6 +3,7 @@
 - name: ansible-securehost | freeipa-client | retreive masters ip
   setup:
   register: ipamasterssetup
+  delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
 
 - name: ansible-securehost | freeipa-client | debug masters ip
@@ -38,10 +39,20 @@
     msg: "{{ groups[idm_group] }}"
     verbosity: 2
 
-- name: ansible-securehost | freeipa-client | compute hostname
+- name: ansible-securehost | freeipa-client | retreive current hostname
+  command: "hostname"
+  changed_when: False
+  register: current_hostname
+
+- name: ansible-securehost | freeipa-client | compute hostname if current is localhost
   ansible.builtin.debug:
-    msg: "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+    msg: "{{ current_hostname.stdout if current_hostname.stdout != 'localhost' else ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
   register: serverhost
+
+- name: ansible-securehost | freeipa-client | compute ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: ipa_master_ip
 
 - name: ansible-securehost | freeipa-client | set hostname to "{{ ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
   ansible.builtin.include_role:
@@ -52,8 +63,7 @@
     ansible_become: true
     hosts_entries:
       - name: "{{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
-        ip: "{{ ipamasterssetup.ansible_facts.ansible_default_ipv4.address |
-      default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+        ip: "{{ ipa_master_ip.msg | ansible.netcommon.ipv4 }}"
 
 - name: ansible-securehost | freeipa-client | install freeipa-client
   ansible.builtin.include_role:

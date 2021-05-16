@@ -5,3 +5,5 @@
     - name: "Include Ansible securehost"
       include_role:
         name: "ansible-securehost"
+      vars:
+        preferred_nic: "eth1"

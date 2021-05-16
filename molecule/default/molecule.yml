@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
   options:
-    requirements-file: requirements-collections.yml # TODO uncomment after the next freeipa collection release
+    requirements-file: requirements-collections.yml
     collections-path: ../community-collections
     role-file: requirements.yml
     roles-path: ../community
