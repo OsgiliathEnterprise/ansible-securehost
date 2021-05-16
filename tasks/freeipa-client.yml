@@ -46,7 +46,7 @@
 
 - name: ansible-securehost | freeipa-client | compute hostname if current is localhost
   ansible.builtin.debug:
-    msg: "{{ current_hostname.stdout if current_hostname.stdout.startswith('localhost') else ns_hostname | default(idm_client_default_domain_prefix + '.' + company_domain) }}"
+    msg: "{{ ns_hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
   register: serverhost
 
 - name: ansible-securehost | freeipa-client | compute ip if preferred_nic is not set
