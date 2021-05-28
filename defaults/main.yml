@@ -15,3 +15,4 @@ idm_client_default_domain_prefix: 'client'
 
 # from ansible_routing
 reverse_proxy_group: "reverse_proxy"
+standalone_role: True

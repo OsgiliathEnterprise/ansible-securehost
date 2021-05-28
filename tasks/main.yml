@@ -1,6 +1,13 @@
 ---
 # tasks file for ansible-securehost
 
+
+- name: ansible-securehost | prerequisites
+  ansible.builtin.import_tasks: deps.yml
+  when:
+   - standalone_role is defined
+   - standalone_role
+
 - name: ansible-securehost | configure ssh
   ansible.builtin.import_tasks: ssh.yml
 

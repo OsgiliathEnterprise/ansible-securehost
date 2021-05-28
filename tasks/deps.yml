@@ -1,0 +1,15 @@
+---
+- name: ansible-securehost | prereq | import fail2ban role
+  import_role:
+    name: robertdebock.fail2ban
+  become: True
+
+- name: ansible-securehost | prereq | import bootstrap role
+  import_role:
+    name: robertdebock.bootstrap
+  become: True
+
+- name: ansible-securehost | prereq | import epel role
+  import_role:
+    name: robertdebock.epel
+  become: True
