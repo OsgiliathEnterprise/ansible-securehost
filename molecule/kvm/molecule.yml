@@ -24,8 +24,6 @@ platforms:
         type: dhcp
     groups:
       - ipaservers
-    provider_raw_config_args:
-      - "storage :file, :size => '1G', :device => 'vdb'"
   - name: client.osgiliath.test
     box: tcharl/fedora-33-cgroupv1
     provider_options:
@@ -38,8 +36,6 @@ platforms:
         type: dhcp
     groups:
       - ipaclients
-    provider_raw_config_args:
-      - "storage :file, :size => '1G', :device => 'vdb'"
 provisioner:
   name: ansible
 #  config_options:
