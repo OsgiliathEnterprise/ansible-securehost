@@ -51,7 +51,7 @@
 - name: ansible-securehost | freeipa-client | compute client hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
-  register: serverhost
+  register: securehost_freeipa_client_serverhost
 
 - name: ansible-securehost | freeipa-client | compute ip if preferred_nic is not set
   ansible.builtin.debug:
@@ -62,7 +62,7 @@
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
-    hostname: "{{ serverhost.msg }}"
+    hostname: "{{ securehost_freeipa_client_serverhost.msg }}"
     hostname_reboot: false
     ansible_become: true
     skip_ipa: True

@@ -12,13 +12,13 @@
 - name: ansible-securehost | freeipa-server | compute server hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_server_default_domain_prefix + '.' + company_domain) }}"
-  register: serverhost
+  register: securehost_freeipa_server_serverhost
 
 - name: ansible-securehost | freeipa-server | set hostname
   ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ serverhost.msg }}"
+    hostname: "{{ securehost_freeipa_server_serverhost.msg }}"
     hostname_reboot: false
     ansible_become: true
   when: standalone_role
