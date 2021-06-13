@@ -10,10 +10,10 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint: yamllint . && flake8 && ansible-lint --exclude=meta,.cache
+lint: yamllint . && flake8 && ansible-lint --exclude=meta
 platforms:
   - name: idm.osgiliath.test
-    box: fedora/33-cloud-base
+    box: tcharl/fedora-33-cgroupv1
     provider_options:
       cpus: 2
       memory: 3096
@@ -27,9 +27,9 @@ platforms:
       - "cache.enable :dnf"
       - "cache.auto_detect = false"
     provider_raw_config_args:
-      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
+      - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
   - name: client.osgiliath.test
-    box: fedora/33-cloud-base
+    box: tcharl/fedora-33-cgroupv1
     cpus: 2
     memory: 3096
     interfaces:
@@ -42,7 +42,7 @@ platforms:
       - "cache.enable :dnf"
       - "cache.auto_detect = false"
     provider_raw_config_args:
-      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
+      - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
 
 provisioner:
   name: ansible
@@ -58,15 +58,15 @@ verifier:
 scenario:
   name: default
   test_sequence:
-    - lint
     - dependency
+    - lint
     - cleanup
     - destroy
     - syntax
     - create
     - prepare
     - converge
- #   - idempotence
+    # - idempotence
     - side_effect
     - verify
     - cleanup
