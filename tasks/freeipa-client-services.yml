@@ -1,0 +1,11 @@
+---
+
+- name: ansible-securehost | freeipa-client | configure http service
+  freeipa.ansible_freeipa.ipaservice:
+    ipaadmin_password: "{{ company_realm_password }}"
+    name: "{{ item }}"
+    host: "{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
+  no_log: "{{ secure_logs }}"
+  loop:
+   - "HOST/{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"

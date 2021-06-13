@@ -1,14 +1,5 @@
 ---
 
-- name: ansible-securehost | freeipa-server | retreive current hostname
-  command: "hostname"
-  changed_when: False
-  register: current_hostname
-
-- name: ansible-securehost | freeipa-server | debug current hostname
-  ansible.builtin.debug:
-    var: current_hostname
-
 - name: ansible-securehost | freeipa-server | compute server hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_server_default_domain_prefix + '.' + company_domain) }}"
@@ -39,7 +30,7 @@
   ansible.builtin.include_role:
     name: freeipa.ansible_freeipa.ipaserver
   vars:
-    ipaserver_ip_addresses: "{{ ansible_all_ipv4_addresses }}"
+    ipaserver_ip_addresses: "{{ [current_host_ip.msg] }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
     ipaserver_forwarders: [ ]

@@ -7,3 +7,4 @@
         name: "ansible-securehost"
       vars:
         company_domain: osgiliath.test
+        secure_logs: False

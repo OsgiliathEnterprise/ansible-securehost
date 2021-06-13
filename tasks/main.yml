@@ -24,3 +24,24 @@
 - name: ansible-securehost | idm client
   ansible.builtin.import_tasks: freeipa-client.yml
   when: idm_client_group | default("") | string in group_names
+
+- name: ansible-securehost | install freeipa-client
+  ansible.builtin.include_role:
+    name: freeipa.ansible_freeipa.ipaclient
+  vars:
+    ipaclients: "{{ groups[idm_client_group] | list }}"
+    ipaadmin_principal: "{{ company_realm_principal }}"
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipaserver_domain: "{{ company_domain }}"
+    ipaserver_realm: "{{ company_domain | upper }}"
+    ipaclient_servers: "{{ groups[idm_group] | list }}"
+    ipaclient_force_join: yes
+    # ipaclient_hostname: "{{ hostname | default(current_hostname.stdout if current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
+    # ipaclient_ip_addresses: "{{ [ ipa_master_ip.msg | ansible.netcommon.ipv4 ] }}"
+    ipaclient_all_ip_addresses: True
+    ipaclient_allow_repair: yes
+    ansible_become: true
+
+- name: ansible-securehost | idm client services
+  ansible.builtin.import_tasks: freeipa-client-services.yml
+  when: idm_client_group | default("") | string in group_names

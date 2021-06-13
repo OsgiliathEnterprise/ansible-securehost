@@ -10,7 +10,7 @@ company_ad_password: '123ADmPass'
 company_realm_principal: 'admin' # cannot be modified
 idm_server_default_domain_prefix: 'idm'
 # Free IPA client defaults
-
+secure_logs: True
 idm_client_default_domain_prefix: 'client'
 
 # from ansible_routing
