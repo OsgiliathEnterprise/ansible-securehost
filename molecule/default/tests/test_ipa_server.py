@@ -39,7 +39,7 @@ def test_ipa_firewalld_freeipa_https_service_is_open(host):
 def test_client_service_is_created(host):
     command = """echo '123ADMin' | \
     kinit admin > /dev/null && \
-    ipa service-find HOST/client.osgiliath.test@OSGILIATH.TEST | \
-    grep -c 'Number of entries returned 1'"""
+    ipa host-find client.osgiliath.test | \
+    grep -c ': client.osgiliath.test'"""
     cmd = host.run(command)
     assert int(cmd.stdout.rstrip()) >= 1
