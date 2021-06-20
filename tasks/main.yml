@@ -44,6 +44,7 @@
     ipaclient_all_ip_addresses: True
     ipaclient_allow_repair: yes
     ansible_become: true
+  when: idm_client_group | default("") | string in group_names
 
 - name: ansible-securehost | idm client services
   ansible.builtin.import_tasks: freeipa-client-services.yml

@@ -1,5 +1,14 @@
 ---
 
+- name: ansible-securehost | freeipa-client | create ipa host
+  freeipa.ansible_freeipa.ipahost:
+    ipaadmin_password: "{{ company_realm_password }}"
+    name: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
+    ip_address: "{{ securehost_current_host_ip.msg }}"
+  no_log: "{{ secure_logs }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
+
+
 # - name: ansible-securehost | freeipa-client | configure http service
 #  freeipa.ansible_freeipa.ipaservice:
 #    ipaadmin_password: "{{ company_realm_password }}"
