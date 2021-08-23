@@ -3,16 +3,19 @@
 - name: ansible-securehost | freeipa-server | compute server hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_server_default_domain_prefix + '.' + company_domain) }}"
-  register: securehost_freeipa_server_serverhost
+  register: securehost_freeipa_server_host
 
 - name: ansible-securehost | freeipa-server | set hostname
   ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ securehost_freeipa_server_serverhost.msg }}"
+    hostname: "{{ securehost_freeipa_server_host.msg }}"
     hostname_reboot: false
     ansible_become: true
-  when: standalone_role
+  when:
+    - standalone_role is defined
+    - standalone_role
+    - securehost_freeipa_server_host.msg == idm_server_default_domain_prefix + '.' + company_domain
 
 - name: ansible-securehost | freeipa-server | opens freeipa services firewall
   ansible.builtin.include_role:

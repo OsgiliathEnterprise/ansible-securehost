@@ -23,9 +23,6 @@ platforms:
         type: dhcp
     groups:
       - ipaservers
-    instance_raw_config_args:
-      - "cache.enable :dnf"
-      - "cache.auto_detect = false"
     provider_raw_config_args:
       - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
   - name: client.osgiliath.test
@@ -38,9 +35,6 @@ platforms:
         type: dhcp
     groups:
       - ipaclients
-    instance_raw_config_args:
-      - "cache.enable :dnf"
-      - "cache.auto_detect = false"
     provider_raw_config_args:
       - "customize ['storagectl', :id, '--name', 'IDE Controller', '--hostiocache', 'on']"
 

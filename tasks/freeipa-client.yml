@@ -1,5 +1,11 @@
 ---
 
+- name: ansible-securehost | unconfigure client
+  ansible.builtin.import_tasks: freeipa-reset-client.yml
+  when:
+   - reset_ipa is defined
+   - reset_ipa
+
 - name: ansible-securehost | freeipa-client | retreive masters ip
   setup:
   register: ipamasterssetup
@@ -10,6 +16,11 @@
   debug:
     msg: "{{ ipamasterssetup }}"
     verbosity: 2
+
+- name: ansible-securehost | freeipa-client | compute master ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: idm_master_ip
 
 - name: ansible-securehost | freeipa-client | create resolved.conf.d directory
   become: true
@@ -42,7 +53,7 @@
 - name: ansible-securehost | freeipa-client | compute client hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
-  register: securehost_freeipa_client_serverhost
+  register: securehost_freeipa_client_host
 
 - name: ansible-securehost | freeipa-client | retreive current machine ip
   setup:
@@ -59,7 +70,7 @@
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
-    hostname: "{{ securehost_freeipa_client_serverhost.msg }}"
+    hostname: "{{ securehost_freeipa_client_host.msg }}"
     hostname_reboot: false
     ansible_become: true
     skip_ipa: True
@@ -67,6 +78,30 @@
       - name: "{{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
         ip: "{{ idm_host_ip.msg | ansible.netcommon.ipv4 }}"
 
+- name: ansible-securehost | install freeipa-client
+  ansible.builtin.include_role:
+    name: freeipa.ansible_freeipa.ipaclient
+  vars:
+    # ipaclients: "{{ groups[idm_client_group] | list }}"
+    ipaadmin_principal: "{{ company_realm_principal }}"
+    ipaadmin_password: "{{ company_realm_password }}"
+    ipaserver_domain: "{{ company_domain }}"
+    ipaserver_realm: "{{ company_domain | upper }}"
+    ipaclient_servers: "{{ [groups[idm_group]] | flatten }}"
+    ipaclient_force_join: yes
+    ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
+    ipaclient_ip_addresses: "{{ [ idm_master_ip.msg | ansible.netcommon.ipv4 ] }}"
+    # ipaclient_all_ip_addresses: True
+    ipaclient_allow_repair: yes
+    ansible_become: true
+
+- name: ansible-securehost | freeipa-client | create ipa host
+  freeipa.ansible_freeipa.ipahost:
+    ipaadmin_password: "{{ company_realm_password }}"
+    name: "{{ securehost_freeipa_client_host.msg }}"
+    ip_address: "{{ securehost_current_host_ip.msg }}"
+  no_log: "{{ secure_logs }}"
+  delegate_to: "{{ groups[idm_group][0] }}"
 
 ##### Commands for testing
 #### kinit admin
