@@ -16,5 +16,8 @@ roles:
   - name: robertdebock.bootstrap
     source: https://galaxy.ansible.com
 
+  - name: geerlingguy.ntp
+    source: https://galaxy.ansible.com
+
   - name: robertdebock.epel
     source: https://galaxy.ansible.com
