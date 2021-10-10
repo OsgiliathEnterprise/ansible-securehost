@@ -1,11 +1,13 @@
 ---
 # tasks file for ansible-securehost
 
-- name: ansible-securehost | dependances
-  ansible.builtin.import_tasks: deps.yml
+- name: ansible-securehost | dependences
+  ansible.builtin.include_tasks: deps.yml
   when:
    - standalone_role is defined
    - standalone_role
+  tags:
+    - standalone
 
 - name: ansible-securehost | prerequisites
   ansible.builtin.import_tasks: prereq.yml

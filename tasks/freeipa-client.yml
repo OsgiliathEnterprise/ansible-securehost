@@ -77,6 +77,8 @@
     hosts_entries:
       - name: "{{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
         ip: "{{ idm_host_ip.msg | ansible.netcommon.ipv4 }}"
+  tags:
+    - standalone
 
 - name: ansible-securehost | install freeipa-client
   ansible.builtin.include_role:

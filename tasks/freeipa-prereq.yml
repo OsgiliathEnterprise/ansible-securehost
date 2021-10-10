@@ -5,3 +5,5 @@
     name: geerlingguy.ntp
   vars:
     ansible_become: yes
+  tags:
+    - standalone

@@ -28,6 +28,8 @@
           - service: freeipa-ldaps
           - service: dns
           - service: https
+  tags:
+    - dependency
 
 - name: ansible-securehost | freeipa-server | configures and installs freeipa server
   ansible.builtin.include_role:

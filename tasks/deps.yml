@@ -1,15 +1,17 @@
 ---
+- name: ansible-securehost | prereq | import bootstrap role
+  ansible.builtin.include_role:
+    name: robertdebock.bootstrap
+  vars:
+    ansible_become: True
+    bootstrap_ansible_user: root
+
 - name: ansible-securehost | prereq | import fail2ban role
-  import_role:
+  ansible.builtin.import_role:
     name: robertdebock.fail2ban
   become: True
 
-- name: ansible-securehost | prereq | import bootstrap role
-  import_role:
-    name: robertdebock.bootstrap
-  become: True
-
 - name: ansible-securehost | prereq | import epel role
-  import_role:
+  ansible.builtin.import_role:
     name: robertdebock.epel
   become: True
