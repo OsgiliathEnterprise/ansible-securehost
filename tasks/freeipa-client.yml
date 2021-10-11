@@ -66,7 +66,7 @@
     msg: "{{ idm_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else idm_host_facts.ansible_facts.ansible_default_ipv4.address | default(idm_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_host_ip
 
-- name: ansible-securehost | freeipa-client | add master hostname entry in client etc/hosts
+- name: "ansible-securehost | freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.netcommon.ipv4 }} entry in client etc/hosts"
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
