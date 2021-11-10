@@ -1,10 +1,8 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: "Include Ansible securehost"
-      include_role:
-        name: "ansible-securehost"
-      vars:
-        company_domain: osgiliath.test
-        secure_logs: False
+  vars:
+    company_domain: osgiliath.test
+    secure_logs: False
+  roles:
+    - role: tcharl.ansible_securehost
