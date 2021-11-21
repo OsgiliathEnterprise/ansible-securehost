@@ -15,10 +15,17 @@
 - name: ansible-securehost | configure ssh
   ansible.builtin.import_tasks: ssh.yml
 
+- name: ansible-securehost | reset idm client
+  ansible.builtin.include_tasks: freeipa-client-delete.yml
+  when:
+    - idm_client_group | default("") | string in group_names
+    - reset_ipa_client
+
+
 - name: ansible-securehost | idm prereq
   ansible.builtin.import_tasks: freeipa-prereq.yml
-  when: |
-    idm_group | default("") | string in group_names or idm_client_group | default("") | string in group_names
+  when:
+    - idm_group | default("") | string in group_names or idm_client_group | default("") | string in group_names
 
 - name: ansible-securehost | idm server
   ansible.builtin.import_tasks: freeipa-server.yml
