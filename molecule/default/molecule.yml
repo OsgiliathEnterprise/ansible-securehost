@@ -24,7 +24,8 @@ platforms:
     interfaces:
       - auto_config: true
         network_name: private_network
-        type: dhcp
+        ip: "192.168.50.4"
+        virtualbox__intnet: true
     groups:
       - ipaservers
     provider_raw_config_args:
@@ -36,7 +37,8 @@ platforms:
     interfaces:
       - auto_config: true
         network_name: private_network
-        type: dhcp
+        ip: "192.168.50.5"
+        virtualbox__intnet: true
     groups:
       - ipaclients
     provider_raw_config_args:

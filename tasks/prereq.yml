@@ -2,8 +2,18 @@
 
 - name: ansible-securehost | prereq | retreive current machine ip
   setup:
+    gather_subset:
+      - network
   register: current_host_facts
   delegate_facts: true
+
+- name: ansible-securehost | prereq | debug preferred_nic
+  ansible.builtin.debug:
+    var: preferred_nic
+
+- name: ansible-securehost | prereq | debug network facts
+  ansible.builtin.debug:
+    var: current_host_facts
 
 - name: ansible-securehost | prereq | compute ip if preferred_nic is not set
   ansible.builtin.debug:
