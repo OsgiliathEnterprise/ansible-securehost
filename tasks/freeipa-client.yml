@@ -7,13 +7,13 @@
    - reset_ipa
 
 - name: ansible-securehost | freeipa-client | retreive masters ip
-  setup:
+  ansible.builtin.setup:
   register: ipamasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
 
 - name: ansible-securehost | freeipa-client | debug masters ip
-  debug:
+  ansible.builtin.debug:
     msg: "{{ ipamasterssetup }}"
     verbosity: 2
 
@@ -24,13 +24,13 @@
 
 - name: ansible-securehost | freeipa-client | create resolved.conf.d directory
   become: true
-  file:
+  ansible.builtin.file:
     state: directory
     dest: '/etc/systemd/resolved.conf.d'
     mode: "0755"
 
 - name: ansible-securehost | freeipa-client | add dns reference in resolv.conf
-  template:
+  ansible.builtin.template:
     src: dns_servers.conf.j2
     dest: "/etc/systemd/resolved.conf.d/99-local-dns-servers.conf"
     owner: root
@@ -39,7 +39,7 @@
   become: true
 
 - name: ansible-securehost | freeipa-client | restarts systemd-resolved
-  service:
+  ansible.builtin.service:
     name: systemd-resolved
     state: restarted
   changed_when: false
@@ -56,7 +56,7 @@
   register: securehost_freeipa_client_host
 
 - name: ansible-securehost | freeipa-client | retreive current machine ip
-  setup:
+  ansible.builtin.setup:
   register: idm_host_facts
   delegate_to: "{{ groups[idm_group][0] }}"
   delegate_facts: true

@@ -1,7 +1,7 @@
 ---
 
 - name: ansible-securehost | prereq | retreive current machine ip
-  setup:
+  ansible.builtin.setup:
     gather_subset:
       - network
   register: current_host_facts
@@ -21,6 +21,6 @@
   register: securehost_current_host_ip
 
 - name: ansible-securehost | prereq | retreive current hostname
-  command: "hostname"
+  ansible.builtin.command: "hostname"
   changed_when: False
   register: securehost_current_hostname
