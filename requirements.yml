@@ -2,22 +2,15 @@
 roles:
   # Install a role from Ansible Galaxy.
   - name: tcharl.ansible_routing
-    source: https://galaxy.ansible.com
 
   - name: tcharl.ansible_nameserver
-    source: https://galaxy.ansible.com
 
   - name: tcharl.ansible_hostname
-    source: https://galaxy.ansible.com
 
   - name: robertdebock.fail2ban
-    source: https://galaxy.ansible.com
 
   - name: robertdebock.bootstrap
-    source: https://galaxy.ansible.com
 
   - name: geerlingguy.ntp
-    source: https://galaxy.ansible.com
 
   - name: robertdebock.epel
-    source: https://galaxy.ansible.com
