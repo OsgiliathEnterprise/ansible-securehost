@@ -2,4 +2,5 @@ exclude_paths:
  - .cache/  # implicit unless exclude_paths is defined in config
  - meta/
 skip_list:
+  - experimental  # all rules tagged as experimental
  - '106'  # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
