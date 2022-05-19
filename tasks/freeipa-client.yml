@@ -6,7 +6,7 @@
    - reset_ipa is defined
    - reset_ipa
 
-- name: ansible-securehost | freeipa-client | retreive masters ip
+- name: ansible-securehost | freeipa-client | retrieve masters ip
   ansible.builtin.setup:
   register: ipamasterssetup
   delegate_facts: true
@@ -32,7 +32,7 @@
 - name: ansible-securehost | freeipa-client | add dns reference in resolv.conf
   ansible.builtin.template:
     src: dns_servers.conf.j2
-    dest: "/etc/systemd/resolved.conf.d/99-local-dns-servers.conf"
+    dest: "/etc/systemd/resolved.conf.d/head.conf"
     owner: root
     group: root
     mode: 0644
@@ -43,6 +43,8 @@
     name: systemd-resolved
     state: restarted
   changed_when: false
+  register: systemd_resolved_restarted
+  failed_when: systemd_resolved_restarted.rc != 0
   become: true
 
 - name: ansible-securehost | freeipa-client | Debug idm groups variable
@@ -66,7 +68,7 @@
     msg: "{{ idm_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else idm_host_facts.ansible_facts.ansible_default_ipv4.address | default(idm_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_host_ip
 
-- name: "ansible-securehost | freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.netcommon.ipv4 }} entry in client etc/hosts"
+- name: "ansible-securehost | freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.utils.ipv4 }} entry in client etc/hosts"
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:

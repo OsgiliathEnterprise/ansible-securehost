@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  description: Wrapper role for fail2ban installation, based on [robertdebock work](https://github.com/robertdebock/ansible-role-fail2ban)
+  description: Wrapper role for fail2ban installation, based on [robertdebock work](https://github.com/robertdebock/ansible-role-fail2ban), also installs and configures Freeipa with reasonable defaults.
   company: Osgiliath
   role_name: ansible_securehost
   author: OsgiliathEnterprise
@@ -35,6 +35,9 @@ galaxy_info:
   - name: Fedora
     versions:
     - 33
+    - 34
+    - 35
+    - 36
   #   - 25
   # - name: SomePlatform
   #   versions:
