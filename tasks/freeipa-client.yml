@@ -44,7 +44,6 @@
     state: restarted
   changed_when: false
   register: systemd_resolved_restarted
-  failed_when: systemd_resolved_restarted.rc != 0
   become: true
 
 - name: ansible-securehost | freeipa-client | Debug idm groups variable
