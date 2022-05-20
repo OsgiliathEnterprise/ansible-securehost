@@ -5,4 +5,4 @@
     company_domain: osgiliath.test
     secure_logs: False
   roles:
-    - role: tcharl.ansible_securehost
+    - role: ansible-securehost
