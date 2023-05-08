@@ -8,38 +8,42 @@ dependency:
     requirements-file: requirements-collections.yml
     collections-path: ${MOLECULE_PROJECT_DIRECTORY}/../community-collections
 driver:
-  name: vagrant
-  provider:
-    name: virtualbox
+  name: podman
 platforms:
   - name: idm.osgiliath.test
-    box: fedora/38-cloud-base
-    provider_options:
-      cpus: 2
-      memory: 3096
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        ip: "192.168.50.4"
-        virtualbox__intnet: "internalnetwork"
+    image: fedora:38
+    dockerfile: ../common/Dockerfile.j2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
+    command: "/sbin/init"
+    systemd: True
+    network: bridge
+#    hostname: idm.osgiliath.test
+    tmpfs:
+      - /run
+      - /tmp
+    dns_servers:
+      - 8.8.8.8
     groups:
       - ipaservers
-    provider_raw_config_args:
-      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
   - name: client.osgiliath.test
-    box: fedora/38-cloud-base
-    cpus: 2
-    memory: 3096
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        ip: "192.168.50.5"
-        virtualbox__intnet: "internalnetwork"
+    image: fedora:38
+    dockerfile: ../common/Dockerfile.j2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
+#    hostname: client.osgiliath.test
+    command: "/sbin/init"
+    systemd: True
+    network: bridge
+    tmpfs:
+      - /run
+      - /tmp
+    dns_servers:
+      - 8.8.8.8
     groups:
       - ipaclients
-    provider_raw_config_args:
-      - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
-
 provisioner:
   name: ansible
 verifier:
@@ -49,6 +53,7 @@ verifier:
   options:
     v: 1
 scenario:
+  name: podman
   test_sequence:
     - dependency
     - cleanup

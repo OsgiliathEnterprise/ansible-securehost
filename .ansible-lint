@@ -1,5 +1,7 @@
 exclude_paths:
  - .cache/
+ - .tox/
+ - tests
  - meta/
  - molecule/
 skip_list:

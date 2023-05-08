@@ -5,20 +5,18 @@ Ansible SecureHost
 * Lint, Tests & requirements: ![Molecule](https://github.com/OsgiliathEnterprise/ansible-securehost/workflows/Molecule/badge.svg)
 * Chat: [![Join the chat at https://gitter.im/OsgiliathEnterprise/platform](https://badges.gitter.im/OsgiliathEnterprise/platform.svg)](https://gitter.im/OsgiliathEnterprise/platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Wrapper role on top of [robertdebock.fail2ban](https://github.com/robertdebock/ansible-role-fail2ban)
-In addition, it will disable login/password ssh authentication 
-
-Also let you install freeipa server (monoinstance at the moment) or freeipa client wrapping the calls in a simpler way
+Configure a freeipa client with a minimum of information
 
 Requirements
 ------------
 
-Like any other platform role, executing `./configure`
+Like any other platform roles, executing `tox -e pipdep`, then `tox -e dependency`
 
 Role Variables
 --------------
 
-Same as [robertdebock.fail2ban](https://github.com/robertdebock/ansible-role-fail2ban)
+Same as [freeipa client](https://github.com/freeipa/ansible-freeipa)
+Note that you'll also need a freeipa-server running somewhere to get it work.
 Take a look at the [molecule tests](./molecule/default/converge.yml) tests and the [default variables](./defaults/main.yml)
 
 Dependencies

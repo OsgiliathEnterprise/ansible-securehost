@@ -1,8 +1,7 @@
 ---
 # defaults file for securehost
-idm_group: 'ipaservers' # do not change: convention from the ipa roles
 idm_client_group: 'ipaclients'
-
+idm_group: 'ipaservers' # do not change: convention from the ipa roles
 # Free IPA server
 company_domain: "osgiliath.test" # That server's hostname will be ipa."{{ company_domain }}"
 company_realm_password: '123ADMin'
