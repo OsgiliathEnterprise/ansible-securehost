@@ -1,0 +1,16 @@
+---
+
+- name: Network | disables IPv6
+  ansible.posix.sysctl:
+    name: net.ipv6.conf.all.disable_ipv6
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+  become: true
+
+- name: Network | restarts NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  become: Yes

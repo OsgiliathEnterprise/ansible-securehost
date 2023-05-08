@@ -18,10 +18,11 @@ platforms:
       cpus: 2
       memory: 3096
     interfaces:
-      - auto_config: true
+      - type: dhcp
+        # ip: "192.168.56.4"
+        auto_config: true
         network_name: private_network
-        ip: "192.168.50.4"
-        virtualbox__intnet: "internalnetwork"
+        # virtualbox__intnet: "internalnetwork"
     groups:
       - ipaservers
     provider_raw_config_args:
@@ -31,10 +32,11 @@ platforms:
     cpus: 2
     memory: 3096
     interfaces:
-      - auto_config: true
+      - type: dhcp
+        # ip: "192.168.56.5"
+        auto_config: true
         network_name: private_network
-        ip: "192.168.50.5"
-        virtualbox__intnet: "internalnetwork"
+        # virtualbox__intnet: "internalnetwork"
     groups:
       - ipaclients
     provider_raw_config_args:

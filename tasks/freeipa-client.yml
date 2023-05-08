@@ -32,7 +32,7 @@
     msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
   register: securehost_freeipa_client_host
 
-- name: Freeipa-client | retreive current machine ip
+- name: Freeipa-client | retrieve current machine ip
   ansible.builtin.setup:
   register: idm_host_facts
   delegate_to: "{{ groups[idm_group][0] }}"
@@ -74,7 +74,7 @@
     ipaclient_force_join: yes
     ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
     ipaclient_ip_addresses: "{{ [ idm_master_ip.msg | ansible.utils.ipv4 ] }}"
-    ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) | default(False) }}"
+    ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) else False }}"
     # ipaclient_all_ip_addresses: True
     ipaclient_allow_repair: yes
     ansible_become: true

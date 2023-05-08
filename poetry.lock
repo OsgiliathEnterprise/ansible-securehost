@@ -198,14 +198,14 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2022.12.7"
+version = "2023.5.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
-    {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
+    {file = "certifi-2023.5.7-py3-none-any.whl", hash = "sha256:c6c2e98f5c7869efca1f8916fed228dd91539f9f1b444c314c06eef02980c716"},
+    {file = "certifi-2023.5.7.tar.gz", hash = "sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7"},
 ]
 
 [[package]]
@@ -800,6 +800,7 @@ files = [
 
 [package.dependencies]
 molecule = ">=5.0"
+python-vagrant = {version = "*", optional = true, markers = "extra == \"vagrant\""}
 
 [package.extras]
 docker = ["docker (>=4.3.1)", "requests", "selinux", "selinux"]
@@ -1051,6 +1052,21 @@ text-unidecode = ">=1.3"
 
 [package.extras]
 unidecode = ["Unidecode (>=1.1.1)"]
+
+[[package]]
+name = "python-vagrant"
+version = "1.0.0"
+description = "Python bindings for interacting with Vagrant virtual machines."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-vagrant-1.0.0.tar.gz", hash = "sha256:a8fe93ccf2ff37ecc95ec2f49ea74a91a6ce73a4db4a16a98dd26d397cfd09e5"},
+    {file = "python_vagrant-1.0.0-py3-none-any.whl", hash = "sha256:9f24a29e3f7b17d79c399d0f358d9cc1b76fd5495698c438a39cdae89de467f0"},
+]
+
+[package.extras]
+test = ["coverage (>=6.3)", "pytest (>=7.0.0)", "pytest-cov (>=3.0.0)"]
 
 [[package]]
 name = "pyyaml"
@@ -1332,4 +1348,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.10"
-content-hash = "2525070a29a1330d656a09172014f6fe0d642770b4a8f5ce8836c5ca1bac0206"
+content-hash = "b0c7c946da98fd0f0f37d76b50dc119b6f16727c872e877d54695bf968155174"

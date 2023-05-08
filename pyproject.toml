@@ -21,7 +21,8 @@ ansible-compat = "*"
 flake8 = "*"
 yamllint = "*"
 pytest-testinfra = "*"
-molecule-plugins = {version = "*", extras = ["podman"]}
+# molecule-plugins = {version = "*", extras = ["podman"]}
+molecule-plugins = {version = "*", extras = ["vagrant"]}
 ansible-lint = "*"
 
 [build-system]

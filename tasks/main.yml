@@ -9,7 +9,13 @@
     - standalone
 
 - name: Prerequisites
-  ansible.builtin.include_tasks: prereq.yml
+  ansible.builtin.import_tasks: prereq.yml
+
+#- name: Network configuration
+#  ansible.builtin.import_tasks: network.yml
+
+- name: Collect facts
+  ansible.builtin.include_tasks: facts.yml
 
 - name: Reset idm client
   ansible.builtin.include_tasks: freeipa-client-delete.yml
