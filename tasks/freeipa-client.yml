@@ -1,73 +1,49 @@
 ---
 
-- name: ansible-securehost | unconfigure client
+- name: Freeipa-client | unconfigure client
   ansible.builtin.import_tasks: freeipa-reset-client.yml
   when:
    - reset_ipa is defined
    - reset_ipa
 
-- name: ansible-securehost | freeipa-client | retrieve masters ip
+- name: Freeipa-client | retrieve masters ip
   ansible.builtin.setup:
   register: ipamasterssetup
   delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
 
-- name: ansible-securehost | freeipa-client | debug masters ip
+- name: Freeipa-client | debug masters ip
   ansible.builtin.debug:
     msg: "{{ ipamasterssetup }}"
     verbosity: 2
 
-- name: ansible-securehost | freeipa-client | compute master ip if preferred_nic is not set
+- name: Freeipa-client | compute master ip if preferred_nic is not set
   ansible.builtin.debug:
     msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_master_ip
 
-- name: ansible-securehost | freeipa-client | create resolved.conf.d directory
-  become: true
-  ansible.builtin.file:
-    state: directory
-    dest: '/etc/systemd/resolved.conf.d'
-    mode: "0755"
-
-- name: ansible-securehost | freeipa-client | add dns reference in resolv.conf
-  ansible.builtin.template:
-    src: dns_servers.conf.j2
-    dest: "/etc/systemd/resolved.conf.d/head.conf"
-    owner: root
-    group: root
-    mode: 0644
-  become: true
-
-- name: ansible-securehost | freeipa-client | restarts systemd-resolved
-  ansible.builtin.service:
-    name: systemd-resolved
-    state: restarted
-  changed_when: false
-  register: systemd_resolved_restarted
-  become: true
-
-- name: ansible-securehost | freeipa-client | Debug idm groups variable
+- name: Freeipa-client | Debug idm groups variable
   ansible.builtin.debug:
     msg: "{{ groups[idm_group] }}"
     verbosity: 2
 
-- name: ansible-securehost | freeipa-client | compute client hostname
+- name: Freeipa-client | compute client hostname
   ansible.builtin.debug:
     msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
   register: securehost_freeipa_client_host
 
-- name: ansible-securehost | freeipa-client | retreive current machine ip
+- name: Freeipa-client | retrieve current machine ip
   ansible.builtin.setup:
   register: idm_host_facts
   delegate_to: "{{ groups[idm_group][0] }}"
   delegate_facts: true
 
-- name: ansible-securehost | freeipa-client | compute ip if preferred_nic is not set
+- name: Freeipa-client | compute ip if preferred_nic is not set
   ansible.builtin.debug:
     msg: "{{ idm_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else idm_host_facts.ansible_facts.ansible_default_ipv4.address | default(idm_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: idm_host_ip
 
-- name: "ansible-securehost | freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.utils.ipv4 }} entry in client etc/hosts"
+- name: "Freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.utils.ipv4 }} entry in client etc/hosts"
   ansible.builtin.include_role:
     name: tcharl.ansible_nameserver
   vars:
@@ -77,11 +53,15 @@
     skip_ipa: True
     hosts_entries:
       - name: "{{ hostvars[groups[idm_group][0]].hostname | default(groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain)) }}"
-        ip: "{{ idm_host_ip.msg | ansible.netcommon.ipv4 }}"
+        ip: "{{ idm_host_ip.msg | ansible.utils.ipv4 }}"
   tags:
     - standalone
 
-- name: ansible-securehost | install freeipa-client
+- name: Freeipa-client | debug ipa server hostname
+  ansible.builtin.debug:
+    msg: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
+
+- name: Freeipa-client | install freeipa-client
   ansible.builtin.include_role:
     name: freeipa.ansible_freeipa.ipaclient
   vars:
@@ -90,15 +70,16 @@
     ipaadmin_password: "{{ company_realm_password }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
-    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group])] | flatten }}"
+    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
     ipaclient_force_join: yes
     ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
-    ipaclient_ip_addresses: "{{ [ idm_master_ip.msg | ansible.netcommon.ipv4 ] }}"
+    ipaclient_ip_addresses: "{{ [ idm_master_ip.msg | ansible.utils.ipv4 ] }}"
+    ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) else False }}"
     # ipaclient_all_ip_addresses: True
     ipaclient_allow_repair: yes
     ansible_become: true
 
-- name: ansible-securehost | freeipa-client | create ipa host
+- name: Freeipa-client | create ipa host
   freeipa.ansible_freeipa.ipahost:
     ipaadmin_password: "{{ company_realm_password }}"
     name: "{{ securehost_freeipa_client_host.msg }}"

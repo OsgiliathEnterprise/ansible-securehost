@@ -1,36 +1,28 @@
 ---
 # tasks file for ansible-securehost
 
-- name: ansible-securehost | dependences
-  ansible.builtin.include_tasks: requirements.yml
+- name: Requirements
+  ansible.builtin.import_tasks: requirements.yml
   when:
-   - standalone_role is defined
    - standalone_role
   tags:
     - standalone
 
-- name: ansible-securehost | prerequisites
+- name: Prerequisites
   ansible.builtin.import_tasks: prereq.yml
 
-- name: ansible-securehost | configure ssh
-  ansible.builtin.import_tasks: ssh.yml
+#- name: Network configuration
+#  ansible.builtin.import_tasks: network.yml
 
-- name: ansible-securehost | reset idm client
+- name: Collect facts
+  ansible.builtin.include_tasks: facts.yml
+
+- name: Reset idm client
   ansible.builtin.include_tasks: freeipa-client-delete.yml
   when:
     - idm_client_group | default("") | string in group_names
     - reset_ipa_client
 
-
-- name: ansible-securehost | idm prereq
-  ansible.builtin.import_tasks: freeipa-prereq.yml
-  when:
-    - idm_group | default("") | string in group_names or idm_client_group | default("") | string in group_names
-
-- name: ansible-securehost | idm server
-  ansible.builtin.import_tasks: freeipa-server.yml
-  when: idm_group | default("") | string in group_names
-
-- name: ansible-securehost | idm client
-  ansible.builtin.import_tasks: freeipa-client.yml
+- name: Idm client
+  ansible.builtin.include_tasks: freeipa-client.yml
   when: idm_client_group | default("") | string in group_names

@@ -1,9 +1,0 @@
----
-
-- name: ansible-securehost | freeipa-prereq | install ntp
-  ansible.builtin.include_role:
-    name: geerlingguy.ntp
-  vars:
-    ansible_become: yes
-  tags:
-    - standalone

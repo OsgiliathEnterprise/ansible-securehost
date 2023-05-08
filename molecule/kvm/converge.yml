@@ -1,8 +1,10 @@
 ---
 - name: Converge
-  hosts: all
+  hosts: client.osgiliath.test
   vars:
     company_domain: osgiliath.test
     secure_logs: False
+    standalone_role: False
+    preferred_nic: "eth1"
   roles:
-    - role: ansible-securehost
+    - role: tcharl.ansible_securehost

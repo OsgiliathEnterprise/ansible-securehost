@@ -8,42 +8,44 @@ dependency:
     requirements-file: requirements-collections.yml
     collections-path: ${MOLECULE_PROJECT_DIRECTORY}/../community-collections
 driver:
-  name: vagrant
-  provider:
-    name: libvirt
+  name: podman
 platforms:
   - name: idm.osgiliath.test
-    box: fedora/38-cloud-base
-    provider_options:
-      driver: "kvm"
-      cpus: 2
-      memory: 2048
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        ip: "192.168.50.4"
+    image: fedora:38
+    dockerfile: ../common/Dockerfile.j2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
+    command: "/sbin/init"
+    systemd: True
+    network: bridge
+#    hostname: idm.osgiliath.test
+    tmpfs:
+      - /run
+      - /tmp
+    dns_servers:
+      - 8.8.8.8
     groups:
       - ipaservers
   - name: client.osgiliath.test
-    box: fedora/38-cloud-base
-    provider_options:
-      driver: "kvm"
-      cpus: 2
-      memory: 2048
-    interfaces:
-      - auto_config: true
-        network_name: private_network
-        ip: "192.168.50.5"
+    image: fedora:38
+    dockerfile: ../common/Dockerfile.j2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
+#    hostname: client.osgiliath.test
+    command: "/sbin/init"
+    systemd: True
+    network: bridge
+    tmpfs:
+      - /run
+      - /tmp
+    dns_servers:
+      - 8.8.8.8
     groups:
       - ipaclients
 provisioner:
   name: ansible
-#  config_options:
-#    defaults:
-#      forks: 20
-#   ssh_connection:
-#     pipelining: true
-#      ssh_args: -o ControlMaster=auto -o ControlPersist=6000s
 verifier:
   name: testinfra
   env:
@@ -51,7 +53,7 @@ verifier:
   options:
     v: 1
 scenario:
-  name: kvm
+  name: podman
   test_sequence:
     - dependency
     - cleanup

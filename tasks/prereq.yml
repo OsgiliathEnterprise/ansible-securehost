@@ -1,26 +1,9 @@
 ---
 
-- name: ansible-securehost | prereq | retreive current machine ip
-  ansible.builtin.setup:
-    gather_subset:
-      - network
-  register: current_host_facts
-  delegate_facts: true
-
-- name: ansible-securehost | prereq | debug preferred_nic
-  ansible.builtin.debug:
-    var: preferred_nic
-
-- name: ansible-securehost | prereq | debug network facts
-  ansible.builtin.debug:
-    var: current_host_facts
-
-- name: ansible-securehost | prereq | compute ip if preferred_nic is not set
-  ansible.builtin.debug:
-    msg: "{{ current_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else current_host_facts.ansible_facts.ansible_default_ipv4.address | default(current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
-  register: securehost_current_host_ip
-
-- name: ansible-securehost | prereq | retreive current hostname
-  ansible.builtin.command: "hostname"
-  changed_when: False
-  register: securehost_current_hostname
+- name: Prereq | install package needed to gather ip and hostname
+  ansible.builtin.package:
+    name: "{{ item }}"
+  with_items:
+    - iproute
+    - hostname
+  become: True
