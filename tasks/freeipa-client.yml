@@ -45,9 +45,18 @@
 
 - name: "Freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.utils.ipv4 }} entry in client etc/hosts"
   ansible.builtin.include_role:
-    name: tcharl.ansible_nameserver
+    name: tcharl.ansible_hostname
   vars:
     hostname: "{{ securehost_freeipa_client_host.msg }}"
+    hostname_reboot: false
+    ansible_become: true
+  tags:
+    - standalone
+
+- name: "Freeipa-client | add master hostname {{ groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain) }} {{ idm_host_ip.msg | ansible.utils.ipv4 }} entry in client etc/hosts"
+  ansible.builtin.include_role:
+    name: tcharl.etchost_append
+  vars:
     hostname_reboot: false
     ansible_become: true
     skip_ipa: True
@@ -60,6 +69,7 @@
 - name: Freeipa-client | debug ipa server hostname
   ansible.builtin.debug:
     msg: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
+    verbosity: 2
 
 - name: Freeipa-client | install freeipa-client
   ansible.builtin.include_role:

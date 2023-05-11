@@ -1,30 +1,17 @@
 ---
 
-- name: Requirements | import epel role
-  ansible.builtin.import_role:
-    name: robertdebock.epel
-  become: True
-
-- name: Requirements | import bootstrap role
-  ansible.builtin.import_role:
-    name: robertdebock.bootstrap
-  become: True
-
 - name: Requirements | import fail2ban role
   ansible.builtin.import_role:
     name: tcharl.fail2ban
   become: True
+  when: idm_client_group | default("") | string in group_names
 
-- name: Requirements | Print all available facts
-  ansible.builtin.debug:
-    var: ansible_facts
-    verbosity: 3
-
-- name: requirements | install ntp
+- name: Requirements | install ntp
   ansible.builtin.import_role:
     name: geerlingguy.ntp
   become: True
   when:
+   - idm_client_group | default("") | string in group_names
    - ansible_facts['virtualization_type'] is defined
    - ansible_facts['virtualization_type'] not in ['container']
 
