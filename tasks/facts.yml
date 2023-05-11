@@ -7,13 +7,15 @@
   register: current_host_facts
   delegate_facts: true
 
-- name: Facts | debug preferred_nic
-  ansible.builtin.debug:
-    var: preferred_nic
-
 - name: Facts | debug network facts
   ansible.builtin.debug:
     var: current_host_facts
+    verbosity: 2
+
+- name: Facts | debug preferred_nic
+  ansible.builtin.debug:
+    var: preferred_nic
+    verbosity: 3
 
 - name: Facts | compute ip if preferred_nic is not set
   ansible.builtin.debug:
