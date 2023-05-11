@@ -3,3 +3,5 @@
 .cache
 build
 .tox
+molecule/default/tests/__pycache__
+molecule/kvm/tests/__pycache__
