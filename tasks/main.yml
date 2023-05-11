@@ -11,9 +11,6 @@
 - name: Prerequisites
   ansible.builtin.import_tasks: prereq.yml
 
-#- name: Network configuration
-#  ansible.builtin.import_tasks: network.yml
-
 - name: Collect facts
   ansible.builtin.include_tasks: facts.yml
 
