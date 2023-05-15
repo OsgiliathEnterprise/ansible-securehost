@@ -12,9 +12,9 @@
   become: True
   when:
    - idm_client_group | default("") | string in group_names
-   - ansible_facts['virtualization_type'] is defined
-   - ansible_facts['virtualization_type'] not in ['container']
+   - ansible_facts['virtualization_type'] is not defined or ansible_facts['virtualization_type'] not in ['container']
 
-- name: Idm server
-  ansible.builtin.include_tasks: freeipa-server.yml
+- name: Requirements |  Idm server
+  ansible.builtin.import_role:
+    name: tcharl.freeipa_server
   when: idm_group | default("") | string in group_names
