@@ -2,7 +2,9 @@ Ansible SecureHost
 =========
 
 * Galaxy: [![Ansible Galaxy](https://img.shields.io/badge/galaxy-tcharl.ansible_securehost-660198.svg?style=flat)](https://galaxy.ansible.com/tcharl/ansible_securehost)
-* Lint, Tests & requirements: ![Molecule](https://github.com/OsgiliathEnterprise/ansible-securehost/workflows/Molecule/badge.svg)
+* Lint & requirements: ![Molecule](https://github.com/OsgiliathEnterprise/ansible-securehost/workflows/Molecule/badge.svg)
+* Tests: ![Molecule](https://app.travis-ci.com/OsgiliathEnterprise/ansible-securehost.svg?branch=master)
+
 * Chat: [![Join the chat at https://gitter.im/OsgiliathEnterprise/platform](https://badges.gitter.im/OsgiliathEnterprise/platform.svg)](https://gitter.im/OsgiliathEnterprise/platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Configure a freeipa client with a minimum of information
