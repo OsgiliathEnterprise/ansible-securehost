@@ -4,6 +4,7 @@ roles:
   - name: tcharl.ansible_routing
   - name: tcharl.ansible_nameserver
   - name: tcharl.ansible_hostname
+  - name: tcharl.etchost_append
   - name: tcharl.fail2ban
   - name: tcharl.freeipa_server
   - name: robertdebock.fail2ban
