@@ -1,7 +1,5 @@
 ---
 # defaults file for securehost
-idm_client_group: 'ipaclients'
-idm_group: 'ipaservers' # do not change: convention from the ipa roles
 # Free IPA server
 company_domain: "osgiliath.test" # That server's hostname will be ipa."{{ company_domain }}"
 company_realm_password: '123ADMin'
@@ -13,6 +11,5 @@ secure_logs: True
 idm_client_default_domain_prefix: 'client'
 
 # from ansible_routing
-reverse_proxy_group: "reverse_proxy"
 standalone_role: True
 reset_ipa_client: false
