@@ -22,7 +22,40 @@
     msg: "{{ current_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else current_host_facts.ansible_facts.ansible_default_ipv4.address | default(current_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
   register: securehost_current_host_ip
 
-- name: Facts | retreive current hostname
+- name: Facts | retrieve current hostname
   ansible.builtin.command: "hostname"
   changed_when: False
   register: securehost_current_hostname
+
+- name: Facts | compute client hostname
+  ansible.builtin.debug:
+    msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
+  register: securehost_freeipa_client_host
+
+- name: Facts | Debug idm groups variable
+  ansible.builtin.debug:
+    msg: "{{ groups[idm_group] }}"
+    verbosity: 2
+
+- name: Facts | retrieve ipa server ip
+  ansible.builtin.setup:
+    gather_subset:
+      - network
+  register: ipamasterssetup
+  delegate_facts: true
+  delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
+
+- name: Facts | debug ipa server ip
+  ansible.builtin.debug:
+    msg: "{{ ipamasterssetup }}"
+    verbosity: 2
+
+- name: Facts | compute ipa server ip if preferred_nic is not set
+  ansible.builtin.debug:
+    msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
+  register: idm_master_ip
+
+- name: Fact | debug ipa server hostname
+  ansible.builtin.debug:
+    msg: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
+    verbosity: 2

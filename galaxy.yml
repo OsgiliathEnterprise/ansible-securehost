@@ -1,8 +1,8 @@
 ---
 namespace: "tcharl"
 name: "ansible_securehost"
-version: "0.0.1"
-description: "Role on top of the marvelous Freeipa collections to setup freeipa server or client on machines"
+version: "2.0.1"
+description: "Role on top of the marvelous Freeipa collections to setup client on machines"
 
 authors:
   - "Charlie Mordant <cmordant1@gmail.com>"
@@ -17,5 +17,4 @@ license:
   - "Apache-2.0"
 tags:
   - "freeipa"
-  - "freeipa-server"
   - "freeipa-client"

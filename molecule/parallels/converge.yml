@@ -5,6 +5,6 @@
     preferred_nic: "eth1"
     company_domain: osgiliath.test
     secure_logs: False
-    standalone_role: True
+    standalone_role: False
   roles:
     - role: tcharl.ansible_securehost

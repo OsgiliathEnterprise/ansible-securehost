@@ -1,5 +1,10 @@
 ---
 
+- name: Requirements |  Idm server
+  ansible.builtin.import_role:
+    name: tcharl.freeipa_server
+  when: idm_group | default("") | string in group_names
+
 - name: Requirements | import fail2ban role
   ansible.builtin.import_role:
     name: tcharl.fail2ban
@@ -14,7 +19,3 @@
    - idm_client_group | default("") | string in group_names
    - ansible_facts['virtualization_type'] is not defined or ansible_facts['virtualization_type'] not in ['container']
 
-- name: Requirements |  Idm server
-  ansible.builtin.import_role:
-    name: tcharl.freeipa_server
-  when: idm_group | default("") | string in group_names

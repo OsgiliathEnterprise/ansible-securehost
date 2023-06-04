@@ -17,14 +17,14 @@ Like any other platform roles, executing `tox -e pipdep`, then `tox -e dependenc
 Role Variables
 --------------
 
-Same as [freeipa client](https://github.com/freeipa/ansible-freeipa)
 Note that you'll also need a freeipa-server running somewhere to get it work.
 Take a look at the [molecule tests](./molecule/default/converge.yml) tests and the [default variables](./defaults/main.yml)
 
 Dependencies
 ------------
 
-[robertdebock.fail2ban](https://github.com/robertdebock/ansible-role-fail2ban)
+* [Collections](./requirements-collections.yml)
+* [Requirements](./requirements-standalone.yml)
 
 License
 -------

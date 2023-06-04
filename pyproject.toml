@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tcharl.ansible_securehost"
-version = "0.1.0"
+version = "2.0.1"
 description = "Freeipa users and group management"
 authors = ["Charlie Mordant <cmordant1@gmail.com>"]
 license = "Apache2"

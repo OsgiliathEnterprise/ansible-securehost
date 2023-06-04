@@ -6,44 +6,7 @@
    - reset_ipa is defined
    - reset_ipa
 
-- name: Freeipa-client | retrieve masters ip
-  ansible.builtin.setup:
-  register: ipamasterssetup
-  delegate_facts: true
-  delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
-
-- name: Freeipa-client | debug masters ip
-  ansible.builtin.debug:
-    msg: "{{ ipamasterssetup }}"
-    verbosity: 2
-
-- name: Freeipa-client | compute master ip if preferred_nic is not set
-  ansible.builtin.debug:
-    msg: "{{ ipamasterssetup.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else ipamasterssetup.ansible_facts.ansible_default_ipv4.address | default(ipamasterssetup.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
-  register: idm_master_ip
-
-- name: Freeipa-client | Debug idm groups variable
-  ansible.builtin.debug:
-    msg: "{{ groups[idm_group] }}"
-    verbosity: 2
-
-- name: Freeipa-client | compute client hostname
-  ansible.builtin.debug:
-    msg: "{{ hostname | default(securehost_current_hostname.stdout if securehost_current_hostname.stdout.endswith(company_domain) else idm_client_default_domain_prefix + '.' + company_domain) }}"
-  register: securehost_freeipa_client_host
-
-- name: Freeipa-client | retrieve current machine ip
-  ansible.builtin.setup:
-  register: idm_host_facts
-  delegate_to: "{{ groups[idm_group][0] }}"
-  delegate_facts: true
-
-- name: Freeipa-client | compute ip if preferred_nic is not set
-  ansible.builtin.debug:
-    msg: "{{ idm_host_facts.ansible_facts['ansible_' + preferred_nic].ipv4.address if preferred_nic is defined else idm_host_facts.ansible_facts.ansible_default_ipv4.address | default(idm_host_facts.ansible_facts.ansible_all_ipv4_addresses[0]) }}"
-  register: idm_host_ip
-
-- name: "Freeipa-client | add master hostname entry in client etc/hosts {{ idm_host_ip.msg | ansible.utils.ipv4 }}"
+- name: "Freeipa-client | Update idm client hostname to {{ securehost_freeipa_client_host.msg }}"
   ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
@@ -53,23 +16,18 @@
   tags:
     - standalone
 
-- name: "Freeipa-client | add master hostname  entry in client etc/hosts {{ idm_host_ip.msg | ansible.utils.ipv4 }}"
+- name: "Freeipa-client | add master hostname  entry in client etc/hosts {{ idm_master_ip.msg | ansible.utils.ipv4 }}"
   ansible.builtin.include_role:
     name: tcharl.etchost_append
   vars:
     hostname_reboot: false
     ansible_become: true
-    skip_ipa: True
     hosts_entries:
       - name: "{{ hostvars[groups[idm_group][0]].hostname | default(groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain)) }}"
-        ip: "{{ idm_host_ip.msg | ansible.utils.ipv4 }}"
+        ip: "{{ idm_master_ip.msg | ansible.utils.ipv4 }}"
+        replace: true
   tags:
     - standalone
-
-- name: Freeipa-client | debug ipa server hostname
-  ansible.builtin.debug:
-    msg: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
-    verbosity: 2
 
 - name: Freeipa-client | install freeipa-client
   ansible.builtin.include_role:

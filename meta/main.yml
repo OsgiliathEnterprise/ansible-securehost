@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  description: Wrapper role for fail2ban installation, based on [robertdebock work](https://github.com/robertdebock/ansible-role-fail2ban), also installs and configures Freeipa with reasonable defaults.
+  description: Role on top of the marvelous Freeipa collections to setup client on machines
   company: Osgiliath
   role_name: ansible_securehost
   author: OsgiliathEnterprise
