@@ -18,4 +18,3 @@
   when:
    - idm_client_group | default("") | string in group_names
    - ansible_facts['virtualization_type'] is not defined or ansible_facts['virtualization_type'] not in ['container']
-
