@@ -38,7 +38,7 @@
     ipaadmin_password: "{{ company_realm_password }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
-    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(groups[idm_group] | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
+    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain)] | flatten }}"
     ipaclient_force_join: True
     ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
     ipaclient_ip_addresses: "{{ [idm_master_ip.msg | ansible.utils.ipv4] }}"

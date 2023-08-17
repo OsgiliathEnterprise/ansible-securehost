@@ -2,6 +2,7 @@
 - name: Converge
   hosts: client.osgiliath.test
   vars:
+    idm_preferred_nic: "eth1"
     company_domain: osgiliath.test
     secure_logs: False
     standalone_role: False

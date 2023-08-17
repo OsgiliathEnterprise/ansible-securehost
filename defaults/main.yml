@@ -9,7 +9,7 @@ idm_server_default_domain_prefix: 'idm'
 # Free IPA client defaults
 secure_logs: True
 idm_client_default_domain_prefix: 'client'
-
+# idm_preferred_nic: 'eth0'
 # from ansible_routing
 standalone_role: True
 reset_ipa_client: false
