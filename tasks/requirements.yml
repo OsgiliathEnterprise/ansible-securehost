@@ -1,6 +1,6 @@
 ---
 
-- name: Requirements |  Idm server
+- name: Requirements | Idm server
   ansible.builtin.import_role:
     name: tcharl.freeipa_server
   when: idm_group | default("") | string in group_names

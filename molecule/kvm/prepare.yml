@@ -6,7 +6,7 @@
         name: tcharl.ansible_securehost
         tasks_from: requirements.yml
       vars:
-        idm_preferred_nic: "eth1"
+        preferred_nic: "eth1"
         standalone_role: True
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
         company_realm_password: '123ADMin'
