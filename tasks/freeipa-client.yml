@@ -23,7 +23,7 @@
     hostname_reboot: false
     ansible_become: true
     hosts_entries:
-      - name: "{{ hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
+      - name: "{{ securehost_idm_master_host.msg }}"
         ip: "{{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
         replace: true
   tags:
