@@ -16,15 +16,15 @@
   tags:
     - standalone
 
-- name: "Freeipa-client | add master hostname  entry in client etc/hosts {{ idm_master_ip.msg | ansible.utils.ipv4 }}"
+- name: "Freeipa-client | add master hostname  entry in client etc/hosts {{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
   ansible.builtin.include_role:
     name: tcharl.etchost_append
   vars:
     hostname_reboot: false
     ansible_become: true
     hosts_entries:
-      - name: "{{ hostvars[groups[idm_group][0]].hostname | default(groups[idm_group][0] | default(idm_server_default_domain_prefix + '.' + company_domain)) }}"
-        ip: "{{ idm_master_ip.msg | ansible.utils.ipv4 }}"
+      - name: "{{ hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain) }}"
+        ip: "{{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
         replace: true
   tags:
     - standalone
@@ -36,12 +36,12 @@
     # ipaclients: "{{ groups[idm_client_group] | list }}"
     ipaadmin_principal: "{{ company_realm_principal }}"
     ipaadmin_password: "{{ company_realm_password }}"
+    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain)] | flatten }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
-    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain)] | flatten }}"
     ipaclient_force_join: True
     ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
-    ipaclient_ip_addresses: "{{ [idm_master_ip.msg | ansible.utils.ipv4] }}"
+    ipaclient_ip_addresses: "{{ [securehost_idm_master_ip.msg | ansible.utils.ipv4] }}"
     ipaclient_force: True
     ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) else False }}"
     # ipaclient_all_ip_addresses: True
