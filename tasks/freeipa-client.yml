@@ -36,7 +36,7 @@
     # ipaclients: "{{ groups[idm_client_group] | list }}"
     ipaadmin_principal: "{{ company_realm_principal }}"
     ipaadmin_password: "{{ company_realm_password }}"
-    ipaclient_servers: "{{ [hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain)] | flatten }}"
+    ipaclient_servers: "{{ securehost_idm_master_host.msg }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
     ipaclient_force_join: True
