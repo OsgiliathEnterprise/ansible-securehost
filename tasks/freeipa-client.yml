@@ -10,7 +10,7 @@
   ansible.builtin.include_role:
     name: tcharl.ansible_hostname
   vars:
-    hostname: "{{ securehost_freeipa_client_host.msg }}"
+    hostname: "{{ securehost_freeipa_client_host.msg}}"
     hostname_reboot: false
     ansible_become: true
   tags:
@@ -23,7 +23,7 @@
     hostname_reboot: false
     ansible_become: true
     hosts_entries:
-      - name: "{{ securehost_idm_master_host.msg }}"
+      - name: "{{ securehost_idm_master_host.msg | first  }}"
         ip: "{{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
         replace: true
   tags:
