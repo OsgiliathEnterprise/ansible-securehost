@@ -67,7 +67,7 @@
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
   register: securehost_idm_current_hostname
 
-- name: Fact | debug ipa server hostname
+- name: Fact | debug ipa server hostname # TODO concat all masters IPs instead of only the first one
   ansible.builtin.debug:
     msg: "{{ [securehost_idm_current_hostname.stdout if securehost_idm_current_hostname is defined else (hostvars[groups[idm_group][0]].hostname | default(idm_server_default_domain_prefix + '.' + company_domain))] | flatten }}"
   register: securehost_idm_master_host
