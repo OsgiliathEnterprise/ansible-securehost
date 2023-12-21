@@ -4,16 +4,14 @@ dependency:
   enabled: ${DEPENDENCY_ENABLED:-True}
   options:
     role-file: ${REQUIREMENTS_PATH:-requirements-standalone.yml}
-    roles-path: ${MOLECULE_PROJECT_DIRECTORY}/../community
     requirements-file: requirements-collections.yml
-    collections-path: ${MOLECULE_PROJECT_DIRECTORY}/../community-collections
 driver:
   name: vagrant
   provider:
     name: virtualbox
 platforms:
   - name: idm.osgiliath.test
-    box: ${TESTBOX:-fedora/38-cloud-base}
+    box: ${TESTBOX:-fedora/39-cloud-base}
     provider_options:
       cpus: 2
       memory: 3096
@@ -28,7 +26,7 @@ platforms:
     provider_raw_config_args:
       - "customize ['storagectl', :id, '--name', 'IDE', '--hostiocache', 'on']"
   - name: client.osgiliath.test
-    box: ${TESTBOX:-fedora/38-cloud-base}
+    box: ${TESTBOX:-fedora/39-cloud-base}
     cpus: 2
     memory: 3096
     interfaces:
