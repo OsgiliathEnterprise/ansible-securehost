@@ -1,0 +1,41 @@
+---
+
+dist: jammy
+
+language: python
+python:
+  - "3.11"
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main'
+        key_url: 'https://apt.releases.hashicorp.com/gpg'
+    update: true
+    packages:
+      - bridge-utils
+      - dnsmasq-base
+      - ebtables
+      - virtinst
+      - libvirt-dev
+      - libvirt-daemon-system
+      - qemu-kvm
+      - qemu-utils
+      - ruby-dev
+      - ca-certificates
+      - curl
+      - gcc
+      - iproute2
+      - sudo
+      - vagrant
+
+install:
+  - vagrant plugin install vagrant-libvirt
+  - pip install wheel pyopenssl tox
+  - sudo chmod o+rwx /var/run/libvirt/libvirt-sock
+
+script:
+  - mv ../ansible-securehost ../tcharl.ansible_securehost
+  - travis_wait 30 tox -e test-exec -- --scenario-name kvm
+branches:
+  only:
+    - master

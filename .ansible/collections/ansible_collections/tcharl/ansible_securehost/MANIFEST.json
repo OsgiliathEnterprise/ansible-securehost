@@ -1,0 +1,34 @@
+{
+ "collection_info": {
+  "namespace": "tcharl",
+  "name": "ansible_securehost",
+  "version": "2.0.1",
+  "authors": [
+   "Charlie Mordant <cmordant1@gmail.com>"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "freeipa",
+   "freeipaclient",
+   "linux"
+  ],
+  "description": "Role on top of the marvelous Freeipa collections to setup client on machines",
+  "license": [
+   "Apache-2.0"
+  ],
+  "license_file": null,
+  "dependencies": {},
+  "repository": "https://github.com/OsgiliathEnterprise/ansible-securehost",
+  "documentation": "https://github.com/OsgiliathEnterprise/ansible-securehost/blob/master/README.md",
+  "homepage": "https://github.com/OsgiliathEnterprise/ansible-securehost",
+  "issues": "https://github.com/OsgiliathEnterprise/ansible-securehost/issues"
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "dde2173d4be33806f613530c77fdc2e403760c4336ead78f306a72e9f4a01507",
+  "format": 1
+ },
+ "format": 1
+}

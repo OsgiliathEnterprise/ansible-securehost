@@ -1,0 +1,30 @@
+---
+
+- name: Freeipa-client-delete | call to ipa client uninstall
+  ansible.builtin.command: "ipa-client-install --uninstall"
+  become: yes
+  failed_when: false
+  changed_when: false
+
+- name: Freeipa-client-delete | delete freeipa package
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: absent
+  become: yes
+  with_items:
+    - freeipa-client
+
+- name: Freeipa-client-delete | delete freeipa generated files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  become: yes
+  with_items:
+    - /var/lib/certmonger
+    - /etc/certmonger
+    - /etc/idmapd.conf.ipabkp
+
+- name: Freeipa-client-delete | reinstall krb5-libs
+  ansible.builtin.command: "dnf -y reinstall krb5-libs"
+  become: yes
+  changed_when: False

@@ -1,0 +1,9 @@
+.idea
+**/*__pychache__*
+.cache
+build
+.tox
+.poetry
+molecule/default/tests/__pycache__
+molecule/kvm/tests/__pycache__
+molecule/parallels/tests/__pycache__
