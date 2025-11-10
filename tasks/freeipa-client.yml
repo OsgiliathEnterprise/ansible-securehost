@@ -1,33 +1,25 @@
 ---
 
-- name: Freeipa-client | unconfigure client
-  ansible.builtin.import_tasks: freeipa-reset-client.yml
-  when:
-   - reset_ipa is defined
-   - reset_ipa
-
-- name: "Freeipa-client | Update idm client hostname to {{ securehost_freeipa_client_host.msg }}"
-  ansible.builtin.include_role:
-    name: tcharl.ansible_hostname
-  vars:
-    hostname: "{{ securehost_freeipa_client_host.msg }}"
-    hostname_reboot: false
-    ansible_become: true
-  tags:
-    - standalone
-
-- name: "Freeipa-client | add master hostname  entry in client etc/hosts {{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
+- name: "Freeipa-client | add idm hostname  entry in client etc/hosts {{ securehost_idm_ip | ansible.utils.ipv4 }}"
   ansible.builtin.include_role:
     name: tcharl.etchost_append
   vars:
     hostname_reboot: false
     ansible_become: true
     hosts_entries:
-      - name: "{{ securehost_idm_master_host.msg | first }}"
-        ip: "{{ securehost_idm_master_ip.msg | ansible.utils.ipv4 }}"
+      - name: "{{ securehost_idm_hostname | first }}"
+        ip: "{{ securehost_idm_ip | ansible.utils.ipv4 }}"
         replace: true
-  tags:
-    - standalone
+
+- name: Freeipa-client | add idm as trusted by client
+  ansible.builtin.include_role:
+    name: tcharl.ansible_routing
+  vars:
+    ansible_become: true
+    firewalld_zones:
+     - name: "{{ firewall_trusted_zone }}"
+       enabled_sources:
+         - source: "{{ securehost_idm_ip }}"
 
 - name: Freeipa-client | install freeipa-client
   ansible.builtin.include_role:
@@ -36,11 +28,11 @@
     ipaclients: "{{ groups[idm_client_group] | list }}"
     ipaadmin_principal: "{{ company_realm_principal }}"
     ipaadmin_password: "{{ company_realm_password }}"
-    ipaclient_servers: "{{ securehost_idm_master_host.msg }}"
+    ipaclient_servers: "{{ securehost_idm_hostname }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
     ipaclient_force_join: True
-    ipaclient_hostname: "{{ securehost_freeipa_client_host.msg }}"
+    ipaclient_hostname: "{{ securehost_currenthost_hostname }}"
     # ipaclient_ip_addresses: "{{ [securehost_idm_master_ip.msg | ansible.utils.ipv4] }}"
     ipaclient_force: True
     ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) else False }}"
@@ -48,11 +40,21 @@
     ipaclient_allow_repair: True
     ansible_become: True
 
+- name: "Freeipa-client | Update idm client hostname to {{ securehost_currenthost_hostname }}"
+  ansible.builtin.include_role:
+    name: tcharl.ansible_hostname
+  vars:
+    hostname: "{{ securehost_currenthost_hostname }}"
+    hostname_reboot: false
+    ansible_become: true
+  tags:
+    - standalone
+
 - name: Freeipa-client | create ipa host
   freeipa.ansible_freeipa.ipahost:
     ipaadmin_password: "{{ company_realm_password }}"
-    name: "{{ securehost_freeipa_client_host.msg }}"
-    ip_address: "{{ securehost_current_host_ip.msg }}"
+    name: "{{ securehost_currenthost_hostname }}"
+    ip_address: "{{ securehost_currenthost_ip }}"
   no_log: "{{ secure_logs }}"
   delegate_to: "{{ groups[idm_group][0] }}"
 

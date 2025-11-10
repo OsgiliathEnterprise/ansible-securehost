@@ -6,6 +6,7 @@ company_realm_password: '123ADMin'
 company_ad_password: '123ADmPass'
 company_realm_principal: 'admin' # cannot be modified
 idm_server_default_domain_prefix: 'idm'
+firewall_trusted_zone: "trusted"
 # Free IPA client defaults
 secure_logs: True
 idm_client_default_domain_prefix: 'client'

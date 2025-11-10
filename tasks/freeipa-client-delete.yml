@@ -1,5 +1,8 @@
 ---
 
+- name: Freeipa-client | unconfigure client
+  ansible.builtin.import_tasks: freeipa-reset-client.yml
+
 - name: Freeipa-client-delete | call to ipa client uninstall
   ansible.builtin.command: "ipa-client-install --uninstall"
   become: yes
