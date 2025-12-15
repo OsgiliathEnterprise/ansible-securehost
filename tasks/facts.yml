@@ -69,4 +69,3 @@
 - name: Fact | idm hostname
   ansible.builtin.debug:
     msg: "{{ securehost_idm_hostname }}"
-
