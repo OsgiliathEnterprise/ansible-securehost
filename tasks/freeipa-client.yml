@@ -62,3 +62,33 @@
 #### kinit admin
 ### ipa user-find
 ### ipa user-add yume --first=yume --last=sensei --email=yume@senzei.io  --shell=/bin/bash --password
+
+- name: Get FreeIPA CA certificate serial number
+  ansible.builtin.shell: |
+    set -o pipefail
+    echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
+    ipa cert-find --status=VALID --subject="Certificate Authority" --raw \
+      | grep "serial_number:" \
+      | cut -d':' -f2 \
+      | tr -d ' '
+  args:
+    executable: /bin/bash
+  register: ipa_ca_serial
+  changed_when: false
+  no_log: true
+  become: true
+
+- name: Retrieve FreeIPA CA certificate
+  ansible.builtin.shell: |
+    set -o pipefail
+    echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
+    ipa cert-show {{ ipa_ca_serial.stdout | trim }} --certificate-out=/etc/pki/ca-trust/source/anchors/ipa-ca.pem
+  args:
+    executable: /bin/bash
+  changed_when: false
+  no_log: true
+  become: true
+
+- name: Update CA trust
+  ansible.builtin.command: update-ca-trust
+  become: true
