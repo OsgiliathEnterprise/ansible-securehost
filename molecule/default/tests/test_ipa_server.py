@@ -6,5 +6,6 @@ def test_client_service_is_created(host):
     kinit admin > /dev/null && \
     ipa host-find client.osgiliath.test | \
     grep -c ': client.osgiliath.test'"""
-    cmd = host.run(command)
+    with host.sudo():
+        cmd = host.run(command)
     assert int(cmd.stdout.rstrip()) >= 1
