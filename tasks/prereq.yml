@@ -48,4 +48,3 @@
     cmd: "nmcli general reload"
   become: true
   changed_when: false
-
