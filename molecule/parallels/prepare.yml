@@ -10,10 +10,9 @@
     - include_role:
         name: tcharl.freeipa_server
       vars:
-        preferred_nic: "eth1"
-        standalone_role: True
-        firewalld_zone: "internal"
         company_domain: "osgiliath.test" # That server's hostname will be idm."{{ company_domain }}"
+        preferred_nic: "enp0s5"
+        standalone_role: True
         company_realm_password: '123ADMin'
         company_ad_password: '123ADmPass'
 
@@ -29,9 +28,8 @@
         name: tcharl.ansible_securehost
         tasks_from: requirements.yml
       vars:
-        preferred_nic: "eth1"
         standalone_role: True
-        firewalld_zone: "internal"
         company_domain: "osgiliath.test" # That server's hostname will be should ipa."{{ company_domain }}"
+        preferred_nic: "enp0s5"
         company_realm_password: '123ADMin'
         company_ad_password: '123ADmPass'

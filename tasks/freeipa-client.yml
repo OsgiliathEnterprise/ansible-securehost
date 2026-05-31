@@ -63,7 +63,7 @@
 ### ipa user-find
 ### ipa user-add yume --first=yume --last=sensei --email=yume@senzei.io  --shell=/bin/bash --password
 
-- name: Get FreeIPA CA certificate serial number
+- name: Freeipa-client | Get FreeIPA CA certificate serial number
   ansible.builtin.shell: |
     set -o pipefail
     echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
@@ -78,7 +78,7 @@
   no_log: true
   become: true
 
-- name: Retrieve FreeIPA CA certificate
+- name: Freeipa-client | Retrieve FreeIPA CA certificate
   ansible.builtin.shell: |
     set -o pipefail
     echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
@@ -91,5 +91,31 @@
 
 - name: Update CA trust
   ansible.builtin.command: update-ca-trust
+  changed_when: false
+  become: true
+
+- name: Freeipa-client | create resolved.conf.d directory
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: '/etc/systemd/resolved.conf.d'
+    mode: "0755"
+
+- name: Freeipa-client | add internal domain dns
+  ansible.builtin.template:
+    src: systemd-resolved.conf.d/head.j2
+    dest: /etc/systemd/resolved.conf.d/head.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+  vars:
+    dns_master_ip_to_set: "{{ securehost_idm_ip }}"
+    domain: "{{ company_domain }}"
+
+- name: Freeipa-client | restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
   changed_when: false
   become: true

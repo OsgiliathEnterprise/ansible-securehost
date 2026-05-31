@@ -4,8 +4,8 @@
   vars:
     standalone_role: False
     secure_logs: False
-    idm_preferred_nic: "eth1"
-    preferred_nic: "eth1"
     company_domain: osgiliath.test
+    idm_preferred_nic: "enp0s5"
+    preferred_nic: "enp0s5"
   roles:
     - role: tcharl.ansible_securehost

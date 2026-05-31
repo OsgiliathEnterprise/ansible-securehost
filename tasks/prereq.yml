@@ -7,7 +7,6 @@
     - iproute
     - hostname
     - NetworkManager
-    - systemd-networkd
     - systemd-resolved
   become: True
 
@@ -29,9 +28,10 @@
     reload: yes
   become: yes
 
-- name: Prereq | Start Systemd Networkd service
+# NM will switch to Resolved as DNS resolver, thus we need to start it before NetworkManager
+- name: Prereq | Start NetworkManager
   ansible.builtin.service:
-    name: systemd-networkd
+    name: NetworkManager
     enabled: True
     state: started
   become: true
@@ -43,9 +43,9 @@
     state: started
   become: true
 
-- name: Prereq | Start NetworkManager service
-  ansible.builtin.service:
-    name: NetworkManager
-    enabled: True
-    state: started
+- name: Prereq | reload NetworkManager to have it rely on systemd-resolved
+  ansible.builtin.command:
+    cmd: "nmcli general reload"
   become: true
+  changed_when: false
+
