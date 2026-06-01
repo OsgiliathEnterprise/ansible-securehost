@@ -75,7 +75,7 @@
     executable: /bin/bash
   register: ipa_ca_serial
   changed_when: false
-  no_log: true
+  no_log: "{{ secure_logs }}"
   become: true
 
 - name: Freeipa-client | Retrieve FreeIPA CA certificate
