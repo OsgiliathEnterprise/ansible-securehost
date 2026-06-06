@@ -21,7 +21,7 @@
   changed_when: False
   register: securehost_current_hostname
 
-- name: Facts | retrieve ipa server ip
+- name: Facts | retrieve ipa server ip without delegate
   ansible.builtin.setup:
     gather_subset:
       - network
@@ -38,7 +38,7 @@
     var: idm_preferred_nic
     verbosity: 3
 
-- name: Facts | retrieve current hostname
+- name: Facts | retrieve current hostname without delegate
   ansible.builtin.command: "hostname"
   changed_when: False
   # delegate_facts: true
