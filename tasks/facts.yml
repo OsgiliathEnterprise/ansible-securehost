@@ -26,7 +26,7 @@
     gather_subset:
       - network
   register: ipamasterssetup
-  #delegate_facts: true
+  # delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
 
 - name: Facts | debug ipa server network information
@@ -41,7 +41,7 @@
 - name: Facts | retrieve current hostname
   ansible.builtin.command: "hostname"
   changed_when: False
-  #delegate_facts: true
+  # delegate_facts: true
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
   register: securehost_idm_current_hostname
 
