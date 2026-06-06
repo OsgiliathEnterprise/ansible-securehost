@@ -5,7 +5,6 @@
     gather_subset:
       - network
   register: current_host_facts
-  delegate_facts: true
 
 - name: Facts | debug network facts
   ansible.builtin.debug:
