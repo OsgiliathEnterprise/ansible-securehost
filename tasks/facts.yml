@@ -33,7 +33,6 @@
 - name: Facts | debug ipa server network information
   ansible.builtin.debug:
     msg: "{{ ipamasterssetup }}"
-    verbosity: 2
 
 - name: Facts | debug idm_preferred_nic
   ansible.builtin.debug:
