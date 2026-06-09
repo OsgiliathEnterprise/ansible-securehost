@@ -35,14 +35,15 @@ addons:
 
 install:
   - vagrant plugin install vagrant-libvirt
-  - pip install wheel pyopenssl tox ansible
+  - pip install uv
   - sudo chmod o+rwx /var/run/libvirt/libvirt-sock
 
 script:
   - mv ../ansible-securehost ../tcharl.ansible_securehost
-  - ansible-galaxy role install -r requirements-standalone.yml
-  - ansible-galaxy collection install -r requirements-collections.yml
-  - travis_wait 50 tox -e test-exec -- --scenario-name kvm
+  - cd ../tcharl.ansible_securehost
+  - uv tool run --python 3.13 --from ansible-core ansible-galaxy role install -r requirements-standalone.yml
+  - uv tool run --python 3.13 --from ansible-core ansible-galaxy collection install -r requirements-collections.yml
+  - travis_wait 50 uv tool run --python 3.13 --with tox tox -e test-exec -- --scenario-name kvm
 branches:
   only:
     - master

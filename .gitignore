@@ -3,6 +3,7 @@
 .cache
 .ansible
 build
+dist
 .tox
 .poetry
 molecule/default/tests/__pycache__
