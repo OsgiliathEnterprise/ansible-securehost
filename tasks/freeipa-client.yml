@@ -31,7 +31,7 @@
     ipaclient_servers: "{{ securehost_idm_hostname }}"
     ipaserver_domain: "{{ company_domain }}"
     ipaserver_realm: "{{ company_domain | upper }}"
-    ipaclient_force_join: True
+    ipaclient_force_join: False
     ipaclient_hostname: "{{ securehost_currenthost_hostname }}"
     # ipaclient_ip_addresses: "{{ [securehost_idm_master_ip.msg | ansible.utils.ipv4] }}"
     ipaclient_force: True
@@ -66,7 +66,8 @@
 - name: Freeipa-client | Get FreeIPA CA certificate serial number
   ansible.builtin.shell: |
     set -o pipefail
-    echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
+    kdestroy 2>/dev/null || true
+    echo '{{ company_realm_password }}' | kinit admin >/dev/null 2>&1
     ipa cert-find --status=VALID --subject="Certificate Authority" --raw \
       | grep "serial_number:" \
       | cut -d':' -f2 \
@@ -77,17 +78,25 @@
   changed_when: false
   no_log: "{{ secure_logs }}"
   become: true
+  retries: 3
+  delay: 5
+  until: ipa_ca_serial.rc == 0
 
 - name: Freeipa-client | Retrieve FreeIPA CA certificate
   ansible.builtin.shell: |
     set -o pipefail
-    echo '{{ company_realm_password }}' | kinit admin > /dev/null 2>&1
+    kdestroy 2>/dev/null || true
+    echo '{{ company_realm_password }}' | kinit admin >/dev/null 2>&1
     ipa cert-show {{ ipa_ca_serial.stdout | trim }} --certificate-out=/etc/pki/ca-trust/source/anchors/ipa-ca.pem
   args:
     executable: /bin/bash
+  register: ipa_ca_cert
   changed_when: false
   no_log: true
   become: true
+  retries: 3
+  delay: 5
+  until: ipa_ca_cert.rc == 0
 
 - name: Update CA trust
   ansible.builtin.command: update-ca-trust
