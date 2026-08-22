@@ -1,5 +1,12 @@
 ---
 
+# Must run before the reset flow removes /etc/ipa, so it reflects the pre-flow state
+- name: Freeipa-client-delete | Check if an IPA client is configured
+  ansible.builtin.stat:
+    path: /etc/ipa/default.conf
+  register: ipa_client_conf
+  become: true
+
 - name: Freeipa-client | unconfigure client
   ansible.builtin.import_tasks: freeipa-reset-client.yml
 
@@ -7,7 +14,9 @@
   ansible.builtin.command: "ipa-client-install --uninstall"
   become: yes
   failed_when: false
-  changed_when: false
+  changed_when: ipa_uninstall.rc == 0
+  register: ipa_uninstall
+  when: ipa_client_conf.stat.exists
 
 - name: Freeipa-client-delete | delete freeipa package
   ansible.builtin.package:
@@ -30,4 +39,5 @@
 - name: Freeipa-client-delete | reinstall krb5-libs
   ansible.builtin.command: "dnf -y reinstall krb5-libs"
   become: yes
-  changed_when: False
+  changed_when: true
+  when: ipa_client_conf.stat.exists

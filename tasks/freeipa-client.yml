@@ -10,6 +10,9 @@
       - name: "{{ securehost_idm_hostname | first }}"
         ip: "{{ securehost_idm_ip | ansible.utils.ipv4 }}"
         replace: true
+  # TODO: remove tag once tcharl.etchost_append's replace-loop fix lands (openspec change "fix-host-entry-replace-loop" in that repo)
+  tags:
+    - molecule-idempotence-notest
 
 - name: Freeipa-client | add idm as trusted by client
   ansible.builtin.include_role:
@@ -34,11 +37,14 @@
     ipaclient_force_join: False
     ipaclient_hostname: "{{ securehost_currenthost_hostname }}"
     # ipaclient_ip_addresses: "{{ [securehost_idm_master_ip.msg | ansible.utils.ipv4] }}"
-    ipaclient_force: True
+    # ipaclient_force: True
     ipaclient_no_ntp: "{{ True if (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] in ['container']) else False }}"
     ipaclient_all_ip_addresses: True
     ipaclient_allow_repair: True
     ansible_become: True
+  # TODO: remove tag once https://github.com/freeipa/ansible-freeipa/pull/1432 is released (upstream role not idempotent yet)
+  tags:
+    - molecule-idempotence-notest
 
 - name: "Freeipa-client | Update idm client hostname to {{ securehost_currenthost_hostname }}"
   ansible.builtin.include_role:
@@ -87,7 +93,7 @@
     set -o pipefail
     kdestroy 2>/dev/null || true
     echo '{{ company_realm_password }}' | kinit admin >/dev/null 2>&1
-    ipa cert-show {{ ipa_ca_serial.stdout | trim }} --certificate-out=/etc/pki/ca-trust/source/anchors/ipa-ca.pem
+    ipa cert-show {{ ipa_ca_serial.stdout | trim }} --raw
   args:
     executable: /bin/bash
   register: ipa_ca_cert
@@ -98,10 +104,15 @@
   delay: 5
   until: ipa_ca_cert.rc == 0
 
-- name: Update CA trust
-  ansible.builtin.command: update-ca-trust
-  changed_when: false
+- name: Freeipa-client | Install FreeIPA CA anchor certificate
+  ansible.builtin.copy:
+    content: "{{ ipa_ca_cert.stdout }}"
+    dest: /etc/pki/ca-trust/source/anchors/ipa-ca.pem
+    owner: root
+    group: root
+    mode: "0644"
   become: true
+  notify: Update CA trust
 
 - name: Freeipa-client | create resolved.conf.d directory
   become: true
@@ -121,10 +132,4 @@
   vars:
     dns_master_ip_to_set: "{{ securehost_idm_ip }}"
     domain: "{{ company_domain }}"
-
-- name: Freeipa-client | restart systemd-resolved
-  ansible.builtin.systemd:
-    name: systemd-resolved
-    state: restarted
-  changed_when: false
-  become: true
+  notify: Restart systemd-resolved

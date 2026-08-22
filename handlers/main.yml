@@ -1,0 +1,13 @@
+---
+# Handlers are notified only when their source task reports changed, so on a
+# re-run with unchanged state they stay no-ops (see design D3/D4).
+- name: Update CA trust
+  ansible.builtin.command: update-ca-trust
+  become: true
+  changed_when: true
+
+- name: Restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+  become: true

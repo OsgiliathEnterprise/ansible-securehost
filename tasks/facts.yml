@@ -18,7 +18,7 @@
 
 - name: Facts | retrieve current hostname
   ansible.builtin.command: "hostname"
-  changed_when: False
+  changed_when: false
   register: securehost_current_hostname
 
 - name: Facts | retrieve ipa server ip without delegate
@@ -40,7 +40,7 @@
 
 - name: Facts | retrieve current hostname without delegate
   ansible.builtin.command: "hostname"
-  changed_when: False
+  changed_when: false
   delegate_to: "{{ groups[idm_group][0] }}" # TODO concat all masters IPs
   register: securehost_idm_current_hostname
 

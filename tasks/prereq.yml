@@ -43,8 +43,17 @@
     state: started
   become: true
 
+- name: Prereq | Check if the system already resolves through systemd-resolved
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: prereq_resolv_conf
+
+# Only reload NetworkManager when it does not rely on systemd-resolved yet, so re-runs are no-ops
 - name: Prereq | reload NetworkManager to have it rely on systemd-resolved
   ansible.builtin.command:
     cmd: "nmcli general reload"
   become: true
-  changed_when: false
+  changed_when: true
+  when: >-
+    not (prereq_resolv_conf.stat.exists and prereq_resolv_conf.stat.islnk
+         and (prereq_resolv_conf.stat.lnk_target | default('')).endswith('/run/systemd/resolve/stub-resolv.conf'))
