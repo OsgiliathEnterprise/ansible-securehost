@@ -14,3 +14,6 @@ idm_client_default_domain_prefix: 'client'
 # from ansible_routing
 standalone_role: True
 reset_ipa_client: false
+# Private network whose reverse zone must resolve via local bind instead of the public fallback.
+# Defaults to the /24 containing securehost_idm_ip; override per scenario for other subnets (octet-aligned prefixes). Align it with ansible nameserver_reverse_zone_prefix
+securehost_idm_dns_cidr: "{{ securehost_idm_ip | ansible.utils.ipsubnet(24) }}"

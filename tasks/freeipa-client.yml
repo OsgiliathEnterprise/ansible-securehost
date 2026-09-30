@@ -130,6 +130,6 @@
     mode: "0644"
   become: true
   vars:
-    dns_master_ip_to_set: "{{ securehost_idm_ip }}"
+    idm_ip_to_set: "{{ securehost_idm_ip }}"
     domain: "{{ company_domain }}"
   notify: Restart systemd-resolved

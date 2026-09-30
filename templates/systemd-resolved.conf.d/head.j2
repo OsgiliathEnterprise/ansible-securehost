@@ -1,3 +1,7 @@
+{% set _cidr = securehost_idm_dns_cidr %}
+{% set _octets = _cidr.split('/')[0].split('.') %}
+{% set _n = (_cidr.split('/')[1] | int) // 8 %}
 [Resolve]
-DNS={{ dns_master_ip_to_set }} 8.8.8.8
-Domains=~{{ domain }}
+DNS={{ idm_ip_to_set }}
+DNS=8.8.8.8
+Domains=~{{ domain }} ~{{ _octets[:_n][::-1] | join('.') }}.in-addr.arpa
